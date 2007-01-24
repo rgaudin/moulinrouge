@@ -1,0 +1,12 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = MyDocument; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {activeSearchItem = id; myWindow = id; searchFieldOutlet = id; webView = id; }; 
+            SUPERCLASS = NSDocument; 
+        }
+    ); 
+    IBVersion = 1; 
+}
