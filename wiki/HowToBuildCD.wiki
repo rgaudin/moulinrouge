@@ -1,0 +1,37 @@
+#labels Phase-Implementation
+How To build the moulin CD from scratch
+
+=Notes =
+The moulin CD is attached to one particular version of the Wikipedia Content.
+The version of the softwares needed to generate the HTML content are available on the Special:Version page of the working Wikipédia you want to copy. [http://fr.wikipedia.org/wiki/Special:Version] for example if you want to use the official french version.
+
+= Softwares required =
+
+  * PHP ( [http://www.php.net/]
+  * Media Wiki [http://www.mediawiki.org/]
+  * MySQL [http://www.mysql.com/]
+  * Apache [http://httpd.apache.org]
+  * Ruby [http://ruby-lang.org]
+  * Mono [http://www.mono-project.com] (optionnal, see Database Import section)
+  * SQLite 3 (+ dev libs) [http://sqlite.org]
+  * BZip2 (+dev libs) [http://bzip.org]
+  * XULRunner [http://developer.mozilla.org/en/docs/XULRunner]
+  * Cygwin [http://www.cygwin.com/]
+  * libcrypt
+  * Build Tools (GCC, make)
+  * XCode tools (universal) [http://developer.apple.com/tools/xcode/]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
