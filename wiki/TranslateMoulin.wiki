@@ -1,0 +1,5 @@
+= Translate Moulin = 
+
+For each language version of moulin, there are several static pages of HTML that need to be created/translated.
+
+
