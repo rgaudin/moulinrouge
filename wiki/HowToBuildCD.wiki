@@ -1,3 +1,4 @@
+#summary How To Build the whole moulin CD
 #labels Phase-Implementation
 How To build the moulin CD from scratch
 
@@ -97,7 +98,7 @@ emerge =app-text/dvipng-1.7
 == Subversion ==
 {{{
 USE="-ipv6 -perl bash-completion" emerge subversion
-}}
+}}}
 
 == MediaWiki ==
 MediaWiki is the PHP software that does the transformation from wiki to html. Since Wikipedia doesn't seems to use release on it's production servers, you have to get the subversion' revision number on the Special:Version page.
