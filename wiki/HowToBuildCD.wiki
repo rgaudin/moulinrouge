@@ -7,7 +7,7 @@ The version of the softwares needed to generate the HTML content are available o
 
 = Softwares required =
 
-  * PHP ( [http://www.php.net/]
+  * PHP [http://www.php.net/]
   * Media Wiki [http://www.mediawiki.org/]
   * MySQL [http://www.mysql.com/]
   * Apache [http://httpd.apache.org]
@@ -20,10 +20,94 @@ The version of the softwares needed to generate the HTML content are available o
   * libcrypt
   * Build Tools (GCC, make)
   * XCode tools (universal) [http://developer.apple.com/tools/xcode/]
+  * Subversion []
 
+= Installing the tools =
+The instructions on this guide will assume you are using a gentoo linux distribution to generate the CD. You can of course use any distribution/packages you want or even build from sources. Just keep in mind that some softwares requires specific version which might not be available as packages for your distribution.
 
+== MySQL ==
+Edit {{{/etc/portage/package.mask}}} to block mysql version :
+{{{
+>=dev-db/mysql-4.1
+>=virtual/mysql-4.1
+}}}
 
+{{{
+USE="big-tables -berkdb" emerge dev-db/mysql
+/usr/bin/mysqladmin -uroot password moulin
+rc-update add mysql default
+}}}
+replace 'moulin' with a custom password above.
 
+== Mono (optionnal) ==
+Mono is used to import the Wikipedia's XML dump into the mysql database. You can avoid this script by running the ruby version which is slower.
+
+{{{
+emerge mono
+}}}
+
+== SQLite 3 ==
+SQLite is used to store index of the compressed archives content (both text and math images).
+{{{
+emerge sqlite
+}}}
+
+== Ruby ==
+Ruby is used to import the Wikipedia's XML dump into MySQL (if you don't run the Mono version) and to run the crawler which is mendatory to generates archives.
+
+Edit {{{/etc/portage/package.keywords}}} to unlock last ruby-dbi version :
+{{{
+dev-ruby/ruby-dbi ~x86
+}}}
+
+{{{
+USE="threads -ipv6" emerge ruby
+USE="mysql sqlite" emerge ruby-dbi
+emerge sqlite3-ruby
+}}}
+
+== Apache (Optionnal) ==
+Apache is not mandatory. it is only used to test visually the results of the wiki processing. That way, you can for example check if your setup is OK for math images generation.
+
+{{{
+USE="-ssl -ipv6 apache2 threads" emerge apache
+}}}
+
+== PHP ==
+PHP is used by the MediaWiki software to transform wiki content into HTML pages.
+{{{
+USE="-berkdb -cli -gdbm -ipv6 apache2 mysql threads" emerge php
+}}}
+
+== ImageMagick and Ghostscripts ==
+Edit {{{/etc/portage/package.keywords}}} to unlock previous dvipng version (1.8 is not working) :
+{{{
+app-text/dvipng ~x86
+}}}
+
+{{{
+USE="-perl gs png truetype wmf -cups" emerge imagemagick
+USE="latex" emerge dev-lang/ocaml
+emerge tetex
+emerge cjk-latex
+USE="png truetype" emerge dvipng
+emerge =app-text/dvipng-1.7
+}}}
+
+== Subversion ==
+{{{
+USE="-ipv6 -perl bash-completion" emerge subversion
+}}
+
+== MediaWiki ==
+MediaWiki is the PHP software that does the transformation from wiki to html. Since Wikipedia doesn't seems to use release on it's production servers, you have to get the subversion' revision number on the Special:Version page.
+
+{{{
+cd /var/www/localhost/htdocs
+svn co -r xxxx http://svn.wikimedia.org/svnroot/mediawiki/trunk/phase3/ .
+}}}
+
+Now, you're done with installing the tools. Let's FeedDatabase
 
 
 

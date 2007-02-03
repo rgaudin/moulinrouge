@@ -1,0 +1,46 @@
+#summary How to feed the database with wiki content
+
+= Get the dump =
+
+Go to [http://download.wikimedia.org/frwiki/latest/] replacing frwiki by xxwiki where xx represent the language code of your target CD.
+FR is for french.
+Download the file {{{xxwiki-latest-pages-articles.xml.bz2}}} and place it into {{{/usr/local/moulin}}}
+
+{{{
+bunzip2 frwiki-latest-pages-articles.xml.bz2
+}}}
+
+= Set up the database =
+
+Assuming our mysql user is root with password 'moulin' and database 'moulin_fr'
+
+{{{
+/etc/init.d/mysql start
+echo "CREATE DATABASE moulin_fr;" | mysql -u root -p moulin  moulin_fr
+}}}
+
+
+Edit {{{/usr/local/moulin/dump2db.[rb|cs]}}} to reflect your mysql path, login, database and password.
+{{{
+gmcs dump2db.cs fr.cs
+mono ./dump2db.exe frwiki-latest-pages-articles.xml
+}}}
+
+Replace fr.cs by the file representing your target's language code. If this file doesn't exists, create it by from another language and replace Namespaces by the ones you'll found in the first (40) lines of the xml dump.
+
+or
+
+{{{
+ruby ./dump2db.rb frwiki-latest-pages-articles.xml
+}}}
+
+This is gonna take some time: 30mn on 1Ghz CoreSolo (mono version).
+
+Download the file {{{xxwiki-latest-categorylinks.sql}}} and place it into {{{/usr/local/moulin}}}.
+Edit {{{frwiki-latest-categorylinks.sql}}} and replace {{{InnoDb}}} by {{{MyISAM}}} at the end of the table definition.
+
+{{{
+mysql -u root -p moulin moulin_fr < frwiki-latest-categorylinks.sql
+}}}
+
+Now, your database is OK to process moulin. You may want to GenerateTheDatas ?
