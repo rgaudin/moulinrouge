@@ -10,43 +10,21 @@ namespace WikiMoulin {
 
 	class Moulin {
 
-		static string s_cmd = "/usr/local/mysql/bin/mysql";
+		static string s_cmd = "/usr/bin/mysql";
 		static string s_pageStart = "<page>";
 		static string s_pageEnd = "</page>";
 		static Dictionary<string, int> s_ns = new Dictionary<string, int> ();
 
 		static Moulin () {
-			s_ns.Add ("Media", -2);
-			s_ns.Add ("Special", -1);
-			s_ns.Add ("", 0);
-			s_ns.Add ("Discuter", 1);
-			s_ns.Add ("Utilisateur", 2);
-			s_ns.Add ("Discussion Utilisateur", 3);
-			s_ns.Add ("Image", 4);
-			s_ns.Add ("Discussion Image", 5);
-			s_ns.Add ("Wikipédia", 6);
-			s_ns.Add ("Discussion Wikipédia", 7);
-			s_ns.Add ("MediaWiki", 8) ;
-			s_ns.Add ("Discussion MediaWiki", 9);
-			s_ns.Add ("Modèle", 10);
-			s_ns.Add ("Discussion Modèle", 11);
-			s_ns.Add ("Aide", 12);
-			s_ns.Add ("Discussion Aide", 13);
-			s_ns.Add ("Catégorie", 14);
-			s_ns.Add ("Discussion Catégorie", 15);
-			s_ns.Add ("Portail", 100);
-			s_ns.Add ("Discussion Portail", 101);
-			s_ns.Add ("Projet", 102);
-			s_ns.Add ("Discussion Projet", 103);
-			s_ns.Add ("Référence", 104);
-			s_ns.Add ("Discussion Référence", 105);
+            WikiLangMap lm = new WikiLangMap();
+            s_ns = lm.Ns;
 		}
 
 		static Process Popen ()
 		{
 			Process proc = new Process ();
 			proc.StartInfo.FileName = s_cmd;
-			proc.StartInfo.Arguments = "-uroot -pmoulinmonk wikipedia";
+			proc.StartInfo.Arguments = "-uroot -pmoulin moulin_fr";
 			proc.StartInfo.CreateNoWindow = true;
 			proc.StartInfo.UseShellExecute = false;
 			proc.StartInfo.RedirectStandardInput = true;

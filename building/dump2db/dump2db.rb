@@ -8,7 +8,7 @@ end
 require 'rexml/document'
 include REXML
 
-MYSQL_CMD = "/usr/bin/mysql -uroot wikipedia"
+MYSQL_CMD = "/usr/bin/mysql -uroot -pmoulin moulin_fr"
 $mysql = IO.popen( MYSQL_CMD, "w" )
 $i = $y = 0
 
