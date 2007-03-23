@@ -17,6 +17,7 @@ Assuming our mysql user is root with password 'moulin' and database 'moulin_fr'
 {{{
 /etc/init.d/mysql start
 echo "CREATE DATABASE moulin_fr;" | mysql -u root -p moulin  moulin_fr
+mysql -u root -p moulin  moulin_fr < tables_isam.sql
 }}}
 
 
@@ -37,7 +38,11 @@ ruby ./dump2db.rb frwiki-latest-pages-articles.xml
 This is gonna take some time: 30mn on 1Ghz CoreSolo (mono version).
 
 Download the file {{{xxwiki-latest-categorylinks.sql}}} and place it into {{{/usr/local/moulin}}}.
-Edit {{{frwiki-latest-categorylinks.sql}}} and replace {{{InnoDb}}} by {{{MyISAM}}} at the end of the table definition.
+
+Edit {{{frwiki-latest-categorylinks.sql}}} and replace {{{InnoDb}}} by {{{MyISAM}}} at the end of the table definition:
+{{{
+sed -i -e 's/) TYPE=InnoDB;/) TYPE=MyISAM;/' frwiki-latest-categorylinks.sql
+}}}
 
 {{{
 mysql -u root -p moulin moulin_fr < frwiki-latest-categorylinks.sql
