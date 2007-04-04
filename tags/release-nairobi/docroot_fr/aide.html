@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr">
+<head>
+<title>Moulin: Wikipedia</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" href="favicon.ico" />
+
+<style type="text/css" media="screen">
+@import "main.css";
+@import "moulin_accueil.css";
+</style>
+
+<script type="text/javascript">
+    function focusSearchBox() {
+        document.getElementById("searchInput").focus();
+    }
+    function addLoadEvent(fn) {
+        if (window.addEventListener) window.addEventListener("load", fn, false);
+        else if (window.attachEvent) window.attachEvent("onload", fn);
+    }
+    addLoadEvent(focusSearchBox);
+        function search()
+    {
+        s = document.getElementById("searchInput");
+        location.href="/_WikiSearch:" + s.value;
+    }
+</script>
+
+</head>
+<body style="background: #ffffff;">
+<div id="globalWrapper">
+<div id="column-content">
+<div id="bodyContent">
+<div class="plainlinks">
+
+<div style="margin: 1em 0 0.3em 0; text-align: center; font-size: 30px; line-height: 110%; font-family: 'Hoefler Text', 'Times New Roman', 'Times New Roman', Times, serif;" class="plainlinks">
+<img src="img/moulin_wiki.png" alt="Moulin: le offline Wikipedia">
+</div>
+
+</div>
+<div class="portlet" id="p-search" style="text-align: center; vertical-align: middle; margin: 1em auto 1.5em auto;
+padding:0.3em; width: 480px; max-width: 95%;">
+
+<h5 style="white-space: nowrap;"><label for="searchInput"></label></h5>
+
+<form action="" id="searchform" onsubmit="search();return false;">
+<fieldset style="border: 2px solid #aaaaaa; background-color: #f9f9f9; padding: 0.8em; width: auto; margin-top: 0.2em;">
+<input type="text" name="WikiSearch" size="25" id="searchInput" style="vertical-align: top; padding: 0; margin: 0; font-size: 1.5em;" />
+<input  type=submit value="Rechercher" style="font-size: 1.3em;"></fieldset></form></div>
+
+<div class="portlet" id="home-menu" style="text-align: center; vertical-align: middle; padding: 0.2em; margin: 0em auto 0.2em auto; width: 480px; max-width: 95%; border: 2px solid #FFFF80; background-color: #FFFFBF; font-size: 1.3em;">
+  <a href="home.html">Accueil</a> - <a href="articles.html">Articles</a> - <a href="liste_de_listes.html">Liste de Listes</a> - <a href="aide.html">Aide</a> - <a href="apropos.html">Credits</a></div>
+  
+  <center>
+  <table width="90%" border="0" cellspacing="0" cellpadding="5">
+    <tr>
+      <td>
+	
+	
+      </td>
+    </tr>
+  </table>
+  
+<br>
+<a href="http://www.moulinwiki.org/?v=wiki_fr_612">Version Française 6.12 - moulinwiki.org</a>
+</center>
+</body>
+</html>
