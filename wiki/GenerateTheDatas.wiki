@@ -1,0 +1,53 @@
+#summary How To Generate the data archives used by the CD.
+#labels Phase-Implementation
+
+= Configure MediaWiki =
+
+{{{
+cp /usr/local/moulin/building/LocalSettings.php /var/www/localhost/htdocs
+cp /usr/local/moulin/building/cmd.php /var/www/localhost/htdocs
+rm -rf /var/www/localhost/htdocs/extensions
+svn co http://svn.wikimedia.org/svnroot/mediawiki/trunk/extensions extensions
+}}}
+
+{{{LocalSettings.php}}} contains the configuration of the MediaWiki software.
+Replace names and path and lang codes according to your target language.
+Also, adapt the end of the file with the correct extensions needed (see http://en.wikipedia.org/wiki/Special:Version)
+
+Make the images folder (which will contain math images) writable:
+{{{
+chmod 777 /var/www/localhost/htdocs/images/ -R
+}}}
+
+Compile the Math image module
+{{{
+cd /var/www/localhost/htdocs/math/
+make
+}}}
+
+= Verification =
+Now, you can launch the Apache web server to test your installation.
+{{{
+/etc/init.d/apache2 start
+}}}
+From your web browser, acces any page to test ; for example {{{http://moulinmonk/fr/index.php/Logiciel_libre}}}. Type the full URL because you probably overwrote the URL-rewriting settings of the MediaWiki configuration (with moulin://)
+Also, verify from your Special:Version page ({{{http://moulinmonk/eo/Speciala:Version}}}) if all the extensions are loaded.
+Also check a math-related article to be sure the Image processing softwares are correctly installed.
+
+= Configure the crawler =
+
+Make target directory:
+{{{mkdir -p /var/moulin/fr/{encyclopedia,encyclopedia-categories}}}}
+
+Edit {{{/usr/local/moulin/building/crawler_fr_encyclopedia.rb}}}: replace paths and lang codes according to your target.
+
+= Launch it =
+{{{
+/usr/local/moulin/building/crawler_fr_encyclopedia.rb
+/usr/local/moulin/building/crawler_fr_encyclopedia-categories.rb
+/usr/local/moulin/building/crawler_fr_encyclopedia-math.rb
+}}}
+This is gonna take like forever to process (about 48h for french): be patient !
+
+
+
