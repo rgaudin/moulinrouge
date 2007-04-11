@@ -1,0 +1,12 @@
+<!ENTITY moulin.title       "moulin - la wikipedia offline">
+<!ENTITY moulin.back        "Precedente">
+<!ENTITY moulin.forward     "Suivante">
+<!ENTITY moulin.reload      "Recharger">
+<!ENTITY moulin.stop        "Stop">
+<!ENTITY moulin.go          "Go">
+<!ENTITY moulin.home        "Accueil">
+<!ENTITY moulin.print       "Imprimer">
+<!ENTITY moulin.search      "Rechercher">
+<!ENTITY moulin.searchInPage "Chercher dans la page">
+<!ENTITY moulin.sizeUp      "Texte plus grand">
+<!ENTITY moulin.sizeDown    "Texte plus petit">
