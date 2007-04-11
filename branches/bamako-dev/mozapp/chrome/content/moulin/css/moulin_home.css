@@ -1,0 +1,6 @@
+
+/* highligh external links with an icon */
+a[href ^="https://"], a[href ^="https://"] {
+	background: url(chrome://moulin/content/img/external.png) center right no-repeat;
+	padding-right: 13px;
+}

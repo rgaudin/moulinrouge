@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--  moulin - offline wikipedia distro
+    Copyright (C) 2006-2007, Kunnafoni Foundation and contributors
+    
+    Contributor(s):
+        reg <reg@nurv.fr>
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA -->
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://moulin/content/css/default.css" type="text/css"?>
+<?xml-stylesheet href="chrome://moulin/skin/moulin.css" type="text/css"?>
+<!DOCTYPE window SYSTEM "chrome://moulin/locale/moulin.dtd">
+<window	xmlns:html="http://www.w3.org/1999/xhtml" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+    id     = "moulin"
+    title  = "&moulin.title;"
+	titlemodifier = "&moulin.title;"
+	titlemenuseparator = " - "
+	width   = "800"
+	height  = "600"
+    sizemode="maximized"
+	screenX ="10"
+	screenY ="10"
+	onload  = "initRoot();">
+<script LANGUAGE="JavaScript" type="text/javascript" src="chrome://moulin/content/js/global.js"/>
+<script LANGUAGE="JavaScript" type="text/javascript" src="chrome://moulin/content/js/moulinbrowser.js"/>
+<script type="application/x-javascript" src="chrome://global/content/printUtils.js"/>
+<script type="application/x-javascript" src="chrome://global/content/findUtils.js"/>
+
+<keyset>
+	<key id="paste-key" keycode="VK_ENTER" oncommand="enter()"/>
+	<key id="paste-key" keycode="VK_RETURN" oncommand="enter()"/>
+	<key id="copy-key" key="C" modifiers="control" oncommand="copy()"/>
+	<key id="find-key" key="F" modifiers="control" oncommand="findin()"/>
+	<key id="home-key" key="H" modifiers="control" oncommand="gohome()"/>
+	<key id="search-key" key="L" modifiers="control" oncommand="textfocus()"/>
+	<key id="search-key" key="K" modifiers="control" oncommand="textfocus()"/>
+	<key id="zoomin-key" key="+" modifiers="control" oncommand="zoomin()"/>
+	<key id="zoomout-key" key="-" modifiers="control" oncommand="zoomout()"/>
+    <key id="print-key" key="P" modifiers="control" oncommand="print()"/>
+	<key id="esc-key" keycode="VK_ESCAPE" oncommand="searchPopupClose();"/>
+	<key id="selectall-key" key="A" modifiers="control" oncommand="selectall();"/>
+</keyset>
+
+<toolbar id="nav-toolbar">
+    <toolbarbutton label="&moulin.home;" oncommand="gohome();" />
+    <toolbarbutton label="&moulin.back;" oncommand="back();" />
+    <toolbarbutton label="&moulin.forward;" oncommand="forward();" />
+    <textbox id="searchbar" value="" flex="0" onchange="search();"/>
+    <toolbarbutton label="&moulin.search;" oncommand="search();" />
+    <toolbarbutton label="&moulin.print;" oncommand="print();" />
+    <toolbarbutton label="&moulin.sizeUp;" oncommand="zoomin();" />
+    <toolbarbutton label="&moulin.sizeDown;" oncommand="zoomout();" />
+    <toolbarbutton label="&moulin.searchInPage;" oncommand="findin();" />
+    <toolbarbutton label="&moulin.searchInPage;" oncommand="testStorage();" />
+</toolbar>
+<browser flex="1" id="content-browser" src="moulin://encyclopedia/eo/Afriko" type="content-primary"/>
+</window>
