@@ -27,8 +27,8 @@ const nsIChannel           = Components.interfaces.nsIChannel;
 const nsIRequest           = Components.interfaces.nsIRequest;
 const nsISupports          = Components.interfaces.nsISupports;
 
-const MOULIN_PROTOCOL_HANDLER_CID   = Components.ID("{0b4543e6-f390-4a87-920e-e3c331113410}");
-const MOULIN_PROTOCOL_HANDLER_CTRID = "@mozilla.org/network/protocol;1?name=moulin";
+const MOULIN_PROTOCOL_HANDLER_CID   = Components.ID("{b6226b50-1e46-4fa1-9614-020df0b1a267}");
+const MOULIN_PROTOCOL_HANDLER_CTRID = "@mozilla.org/network/protocol;1?name=moulin-search";
 
 
 function MoulinChannel (uri)
@@ -76,21 +76,27 @@ function moulinch_aopen (streamListener, context)
 	this.streamListener = streamListener;
 	this.context = context;
   
-	var prompt = Components.classes["@mozilla.org/network/default-prompt;1"].createInstance(Components.interfaces.nsIPrompt);
-	var moulinComp = Components.classes["@kunnafoni.org/cpp_nsMoulin;1"].createInstance(Components.interfaces.nsIMoulin);
+	//var prompt = Components.classes["@mozilla.org/network/default-prompt;1"].createInstance(Components.interfaces.nsIPrompt);
 
+	var limit = {start:0, nbr:20}; // sql LIMIT param
+	
 	var path = Url.decode(this.URI.path);
-
 	var tmp = path.substr(2, path.length); // now should be like encyclopedia/fr/whatever
 	sepI = tmp.indexOf("/");
 	var project = tmp.slice(0, sepI);
+	if (project.indexOf("@") != -1) {
+		pai = project.indexOf("@");
+		paa = project.slice(0, pai).split(":");
+		limit.start = paa[0];
+		limit.nbr = paa[1];
+		project = project.slice(pai +1, project.length);
+	}
 	tmp = tmp.substr(sepI + 1, tmp.length); // now should be like fr/whatever
 	sepI = tmp.indexOf("/");
 	var lang = tmp.slice(0, sepI);
-	var articleName = tmp.substr(sepI + 1, tmp.length).replace(/ /g, "_");;
+	var searchQuery = tmp.substr(sepI + 1, tmp.length);
 	
 	// we have `project`, `lang` and `articleName` to search DB
-	//prompt.alert("ddd", articleName);
 	
 	var docrootFD = Components.classes["@mozilla.org/file/directory_service;1"].getService(Components.interfaces.nsIProperties).get("CurProcD", Components.interfaces.nsIFile).parent;
 	var todocrootpath = "datas/"+lang+"/docroot";
@@ -101,41 +107,54 @@ function moulinch_aopen (streamListener, context)
 	dataDB.append("index.db");
 	
 	headerFile = docrootFD.clone();
-	headerFile.append("header.html");
-	//footerFile = docrootFD.clone(); // footer is included in data
-	//footerFile.append("footer.html");
+	headerFile.append("search-header.html");
+	itemFile = docrootFD.clone();
+	itemFile.append("search-item.html");
+	footerFile = docrootFD.clone();
+	footerFile.append("search-footer.html");
+	searchItemString = getFileContent(itemFile.path);
 	
-	dataBaseResult = fetchDBDetails(dataDB, articleName);
-	while (dataBaseResult.redirect != "" && dataBaseResult.redirect != dataBaseResult.articleName) { // should prevent an infinite loop ?
-		//prompt.alert("redirect", "redirecting "+dataBaseResult.articleName+" to "+dataBaseResult.redirect);
-		dataBaseResult = fetchDBDetails(dataDB, dataBaseResult.redirect);
-	}
-
-	if (dataBaseResult.redirect != "") {
-		// shouldn't happen.
-		//prompt.alert("Redirection", "Requested article ("+dataBaseResult.articleName+") point to "+dataBaseResult.redirect+" in the database.");
-	}
-	
-	if (dataBaseResult.nbOccur == 0) {
-		// not found in DB ; should send the error page.
-		//prompt.alert("Database Error", "Requested article ("+dataBaseResult.articleName+") couldn't be found in the database.");
-		errorFile = docrootFD.clone();
-		errorFile.append("error.html");
-		dataString += getFileContent(errorFile.path);
-	}
-	
-	if (dataBaseResult.aarchive != dataBaseResult.barchive)
-		length = -1;
-	else
-		length = dataBaseResult.bstartoff - dataBaseResult.astartoff;
-	
-	archivefile = datarootFD.clone();
-	archivefile.append(dataBaseResult.aarchive+".bz2");
-
 	var dataString = new String();
-	dataString += getFileContent(headerFile.path).replace("[[[TITLE]]]", dataBaseResult.articleName.replace(/_/g, " "));
-	dataString += moulinComp.retrievePageContent(archivefile.path, dataBaseResult.astartoff, length - 1);
-	//dataString += getFileContent(footerFile.path);
+	
+	// SEARCH LOOP
+	var MAX_RESULTS = 20;
+	var storageService = Components.classes["@mozilla.org/storage/service;1"].getService(Components.interfaces.mozIStorageService);
+	var mDBConn = storageService.openDatabase(dataDB);
+	// nb of search results
+	var statement = mDBConn.createStatement("SELECT COUNT(*) FROM windex WHERE stdtitle LIKE ?1;");
+	statement.bindUTF8StringParameter(0, ""+searchQuery+"%");
+	var nbOfResults = 0;
+	while (statement.executeStep()) {
+		nbOfResults = statement.getInt32(0);
+	}
+	
+	dataString += globalReplace(getFileContent(headerFile.path), {var:"TITLE", value:searchQuery}, {var:"SEARCHQUERY", value:searchQuery},
+	{var:"NBRESULTS", value:nbOfResults}, {var:"LIMIT_S", value:limit.start}, {var:"LIMIT_N", value:limit.nbr}, {var:"PROJECT", value:project}, {var:"LANG", value:lang});
+	
+	statement = mDBConn.createStatement("SELECT title FROM windex WHERE stdtitle LIKE ?1 LIMIT ?2, ?3;");
+	statement.bindUTF8StringParameter(0, ""+searchQuery+"%");
+	statement.bindInt32Parameter(1, limit.start);
+	statement.bindInt32Parameter(2, limit.nbr);
+	var nbOccur = 0;
+	while (statement.executeStep()) {
+		nbOccur++;
+		var result = {};
+		result.url = statement.getUTF8String(0);
+		result.title = result.url.replace(/_/g, " ");
+		dataString += globalReplace(searchItemString, {var:"LINKURL", value:"moulin://"+project+"/"+lang+"/"+result.title}, {var:"LINKNAME", value:result.title});
+	}
+	
+	if (nbOccur == 0) {
+		// not found in DB ; should send the error page.
+		//prompt.alert("Database Error", "Requested article ("+searchQuery+") couldn't be found in the database.");
+		noResultFile = docrootFD.clone();
+		noResultFile.append("search-noresult.html");
+		dataString += globalReplace(getFileContent(noResultFile.path), {var:"TITLE", value:searchQuery}, {var:"SEARCHQUERY", value:searchQuery},
+	{var:"NBRESULTS", value:nbOfResults}, {var:"LIMIT_S", value:limit.start}, {var:"LIMIT_N", value:limit.nbr}, {var:"PROJECT", value:project}, {var:"LANG", value:lang});
+	}
+
+	dataString +=  globalReplace(getFileContent(footerFile.path), {var:"TITLE", value:searchQuery}, {var:"SEARCHQUERY", value:searchQuery},
+	{var:"NBRESULTS", value:nbOfResults}, {var:"LIMIT_S", value:limit.start}, {var:"LIMIT_N", value:limit.nbr}, {var:"PROJECT", value:project}, {var:"LANG", value:lang});
 
 	var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
 	converter.charset =  "UTF-8";
@@ -286,7 +305,7 @@ function fetchDBDetails( dataDB, articleName ) {
 		result.astartoff = statement.getInt32(2);
 		result.barchive = statement.getUTF8String(4);
 		result.bstartoff = statement.getInt32(5);
-		result.redirect = statement.getUTF8String(7).replace(/ /g, "_");
+		result.redirect = statement.getUTF8String(7);
 	}
 	return result;
 }

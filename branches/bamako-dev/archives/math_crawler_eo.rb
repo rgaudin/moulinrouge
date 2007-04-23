@@ -7,11 +7,13 @@ puts "#{Time.now.to_s} Starting..."
 $IMAGES_FOLDER = "/var/www/localhost/htdocs/eo/images/math/"
 $BLOCK_SIZE	= 5242880 # 5MB
 $DATA_PATH	= "/var/moulin/eo/math/"
-INDEX_SCHEMA= "CREATE TABLE mindex (
+INDEX_SCHEMA= "CREATE TABLE windex (
 	id INTEGER PRIMARY KEY,
-	md5 VARCHAR(80) UNIQUE,
+	title VARCHAR(250),
 	archive INTEGER,
-	startoff INTEGER
+	startoff INTEGER,
+	redirect VARCHAR(250),
+	stdtitle VARCHAR(250)
 );"
 
 $index	= DBI.connect( "DBI:Sqlite3:#{$DATA_PATH}index.db" )
@@ -33,7 +35,7 @@ def recurs_browse( folder )
     	   content = File.open( file ).read
     	   startoff = $data.pos
     	   $data.write( content )
-    	   $index.do( "INSERT INTO mindex (md5, archive, startoff) VALUES ( \"#{f.gsub('.png','')}\", \"#{$archive}\", #{startoff} );" )
+    	   $index.do( "INSERT INTO windex (title, archive, startoff) VALUES ( \"#{f.gsub('.png','')}\", \"#{$archive}\", #{startoff} );" )
     	   $all_md5 << md5
     	   if $data.pos > $BLOCK_SIZE then
     	   	$data.close
