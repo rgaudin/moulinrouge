@@ -1,4 +1,6 @@
 content moulin content/moulin/
 locale moulin en-US locale/en-US/moulin/
 locale moulin fr-FR locale/fr-FR/moulin/
+locale moulin fa locale/fa/moulin/
+locale moulin ar locale/ar/moulin/
 skin moulin moulinClassic skin/moulinClassic/

@@ -1,0 +1,13 @@
+<!ENTITY moulin.title       "ویکی‌پدیای برون خط">
+<!ENTITY moulin.back        "بازگشت">
+<!ENTITY moulin.forward     "پیش به جلو">
+<!ENTITY moulin.reload      "بارگذاری مجدد">
+<!ENTITY moulin.stop        "ایست">
+<!ENTITY moulin.go          "برو">
+<!ENTITY moulin.home        "خانه">
+<!ENTITY moulin.print       "چاپ">
+<!ENTITY moulin.search      "جست‌وجو">
+<!ENTITY moulin.searchInPage    "جست‌وجو در برگه">
+<!ENTITY moulin.sizeUp      "افزایش اندازه متن">
+<!ENTITY moulin.sizeDown    "کاهش اندازه متن">
+<!ENTITY moulin.dir         "rtl">

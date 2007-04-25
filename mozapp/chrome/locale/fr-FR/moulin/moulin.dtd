@@ -10,3 +10,4 @@
 <!ENTITY moulin.searchInPage "Chercher dans la page">
 <!ENTITY moulin.sizeUp      "Texte plus grand">
 <!ENTITY moulin.sizeDown    "Texte plus petit">
+<!ENTITY moulin.dir         "ltr">
