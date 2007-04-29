@@ -92,7 +92,7 @@ function moulinch_aopen (streamListener, context)
 	// we have `project`, `lang` and `articleName` to search DB
 	//prompt.alert("ddd", articleName);
 	
-	var docrootFD = Components.classes["@mozilla.org/file/directory_service;1"].getService(Components.interfaces.nsIProperties).get("CurProcD", Components.interfaces.nsIFile).parent;
+	var docrootFD = Components.classes["@mozilla.org/file/directory_service;1"].getService(Components.interfaces.nsIProperties).get("resource:app", Components.interfaces.nsIFile);
 	var todocrootpath = "datas/"+lang+"/docroot";
 	for each (var i in todocrootpath.split("/")) { docrootFD.append(i); }
 	var datarootFD = docrootFD.parent;
