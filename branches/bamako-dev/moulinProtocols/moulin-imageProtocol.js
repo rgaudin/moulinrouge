@@ -27,8 +27,8 @@ const nsIChannel           = Components.interfaces.nsIChannel;
 const nsIRequest           = Components.interfaces.nsIRequest;
 const nsISupports          = Components.interfaces.nsISupports;
 
-const MOULIN_PROTOCOL_HANDLER_CID   = Components.ID("{b6226b50-1e46-4fa1-9614-020df0b1a267}");
-const MOULIN_PROTOCOL_HANDLER_CTRID = "@mozilla.org/network/protocol;1?name=moulin-search";
+const MOULIN_PROTOCOL_HANDLER_CID   = Components.ID("{137510a5-0825-4530-9ca1-e4bc9a33b531}");
+const MOULIN_PROTOCOL_HANDLER_CTRID = "@mozilla.org/network/protocol;1?name=moulin-image";
 
 
 function MoulinChannel (uri)
@@ -75,92 +75,8 @@ function moulinch_aopen (streamListener, context)
 {
 	this.streamListener = streamListener;
 	this.context = context;
-  
-	//var prompt = Components.classes["@mozilla.org/network/default-prompt;1"].createInstance(Components.interfaces.nsIPrompt);
-
-	var limit = {start:0, nbr:20}; // sql LIMIT param
-	
-	var path = Url.decode(this.URI.path);
-	var tmp = path.substr(2, path.length); // now should be like encyclopedia/fr/whatever
-	sepI = tmp.indexOf("/");
-	var project = tmp.slice(0, sepI);
-	if (project.indexOf("@") != -1) {
-		pai = project.indexOf("@");
-		paa = project.slice(0, pai).split(":");
-		limit.start = paa[0];
-		limit.nbr = paa[1];
-		project = project.slice(pai +1, project.length);
-	}
-	tmp = tmp.substr(sepI + 1, tmp.length); // now should be like fr/whatever
-	sepI = tmp.indexOf("/");
-	var lang = tmp.slice(0, sepI);
-	var searchQuery = tmp.substr(sepI + 1, tmp.length);
-	
-	// we have `project`, `lang` and `articleName` to search DB
-	
-	var docrootFD = Components.classes["@mozilla.org/file/directory_service;1"].getService(Components.interfaces.nsIProperties).get("resource:app", Components.interfaces.nsIFile);
-	var todocrootpath = "datas/"+lang+"/docroot";
-	for each (var i in todocrootpath.split("/")) { docrootFD.append(i); }
-	var datarootFD = docrootFD.parent;
-	datarootFD.append(project);
-	dataDB = datarootFD.clone();
-	dataDB.append("index.db");
-	
-	headerFile = docrootFD.clone();
-	headerFile.append("search-header.html");
-	itemFile = docrootFD.clone();
-	itemFile.append("search-item.html");
-	footerFile = docrootFD.clone();
-	footerFile.append("search-footer.html");
-	searchItemString = getFileContent(itemFile.path);
-	
-	var dataString = new String();
-	
-	// SEARCH LOOP
-	var MAX_RESULTS = 20;
-	var storageService = Components.classes["@mozilla.org/storage/service;1"].getService(Components.interfaces.mozIStorageService);
-	var mDBConn = storageService.openDatabase(dataDB);
-	// nb of search results
-	var statement = mDBConn.createStatement("SELECT COUNT(*) FROM windex WHERE stdtitle LIKE ?1;");
-	statement.bindUTF8StringParameter(0, ""+searchQuery+"%");
-	var nbOfResults = 0;
-	while (statement.executeStep()) {
-		nbOfResults = statement.getInt32(0);
-	}
-	
-	dataString += globalReplace(getFileContent(headerFile.path), {var:"TITLE", value:searchQuery}, {var:"SEARCHQUERY", value:searchQuery},
-	{var:"NBRESULTS", value:nbOfResults}, {var:"LIMIT_S", value:limit.start}, {var:"LIMIT_N", value:limit.nbr}, {var:"PROJECT", value:project}, {var:"LANG", value:lang});
-	
-	statement = mDBConn.createStatement("SELECT title FROM windex WHERE stdtitle LIKE ?1 LIMIT ?2, ?3;");
-	statement.bindUTF8StringParameter(0, ""+searchQuery+"%");
-	statement.bindInt32Parameter(1, limit.start);
-	statement.bindInt32Parameter(2, limit.nbr);
-	var nbOccur = 0;
-	while (statement.executeStep()) {
-		nbOccur++;
-		var result = {};
-		result.url = statement.getUTF8String(0);
-		result.title = result.url.replace(/_/g, " ");
-		dataString += globalReplace(searchItemString, {var:"LINKURL", value:"moulin://"+project+"/"+lang+"/"+result.title}, {var:"LINKNAME", value:result.title});
-	}
-	
-	if (nbOccur == 0) {
-		// not found in DB ; should send the error page.
-		//prompt.alert("Database Error", "Requested article ("+searchQuery+") couldn't be found in the database.");
-		noResultFile = docrootFD.clone();
-		noResultFile.append("search-noresult.html");
-		dataString += globalReplace(getFileContent(noResultFile.path), {var:"TITLE", value:searchQuery}, {var:"SEARCHQUERY", value:searchQuery},
-	{var:"NBRESULTS", value:nbOfResults}, {var:"LIMIT_S", value:limit.start}, {var:"LIMIT_N", value:limit.nbr}, {var:"PROJECT", value:project}, {var:"LANG", value:lang});
-	}
-
-	dataString +=  globalReplace(getFileContent(footerFile.path), {var:"TITLE", value:searchQuery}, {var:"SEARCHQUERY", value:searchQuery},
-	{var:"NBRESULTS", value:nbOfResults}, {var:"LIMIT_S", value:limit.start}, {var:"LIMIT_N", value:limit.nbr}, {var:"PROJECT", value:project}, {var:"LANG", value:lang});
-
-	var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
-	converter.charset =  "UTF-8";
-	var dataStringUTF8 = converter.ConvertFromUnicode(dataString);
 	try {
-		this.respond(dataStringUTF8);
+		this.respond("hellllo");
 	} catch(ex) {
 		dump("error aopen");
 	}
@@ -183,7 +99,7 @@ function MoulinProtocolHandler() {
 }
 
 
-MoulinProtocolHandler.prototype.scheme = "moulin";
+MoulinProtocolHandler.prototype.scheme = "moulin-image";
 
 MoulinProtocolHandler.prototype.defaultPort = -1; 
 MoulinProtocolHandler.prototype.protocolFlags = nsIProtocolHandler.URI_NORELATIVE|nsIProtocolHandler.URI_NOAUTH;
@@ -204,7 +120,44 @@ function moulin_newuri (spec, charset, baseURI)
 MoulinProtocolHandler.prototype.newChannel =
 function moulin_newchannel (uri)
 {
-    return new MoulinChannel (uri);
+    var path = uri.path;
+
+	var tmp = path.substr(2, path.length); // now should be like encyclopedia/fr/whatever
+	sepI = tmp.indexOf("/");
+	var project = tmp.slice(0, sepI);
+	tmp = tmp.substr(sepI + 1, tmp.length); // now should be like fr/whatever
+	sepI = tmp.indexOf("/");
+	var lang = tmp.slice(0, sepI);
+	var articleName = tmp.substr(sepI + 1, tmp.length).replace(/ /g, "_");;
+    
+    var tmpFile = Components.classes["@mozilla.org/file/directory_service;1"].getService(Components.interfaces.nsIProperties).get("TmpD", Components.interfaces.nsIFile);
+    tmpFile.append(articleName);
+    
+    var docrootFD = Components.classes["@mozilla.org/file/directory_service;1"].getService(Components.interfaces.nsIProperties).get("resource:app", Components.interfaces.nsIFile);
+	var todocrootpath = "datas/"+lang+"/"+project;
+	for each (var i in todocrootpath.split("/")) { docrootFD.append(i); }
+	dataDB = datarootFD.clone();
+	dataDB.append("index.db");
+	dataBaseResult = fetchDBDetails(dataDB, articleName);
+	
+    if (dataBaseResult.nbOccur == 0) {
+        return;
+	}
+	
+	if (dataBaseResult.aarchive != dataBaseResult.barchive)
+		length = -1;
+	else
+		length = dataBaseResult.bstartoff - dataBaseResult.astartoff;
+
+	archivefile = datarootFD.clone();
+	archivefile.append(dataBaseResult.aarchive);
+
+    createTemporaryFile(archivefile.path, dataBaseResult.astartoff, length, tmpFile.path);
+    
+    var ioService = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);
+    var newURI = ioService.newURI("file://"+tmpFile.path, null, null); 
+    var newChannel = ioService.newChannelFromURI(newURI);
+    return newChannel;
 }
 
 ////////////////////////////////////////////////////////////////
@@ -268,26 +221,30 @@ function NSGetModule(compMgr, fileSpec) {
   return Module;
 }
 
-// returns the content of a file ; used for templating.
-function getFileContent(fileName) {
-	var dataString = "";
-	var file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
- 	file.initWithPath(fileName);
-	var fstream = Components.classes["@mozilla.org/network/file-input-stream;1"].createInstance(Components.interfaces.nsIFileInputStream);
-	var sstream = Components.classes["@mozilla.org/scriptableinputstream;1"].createInstance(Components.interfaces.nsIScriptableInputStream);
-	fstream.init(file, -1, 0, 0);
-	sstream.init(fstream); 
+function createTemporaryFile(src, startoffset, length, dest) {
 
-	var str = sstream.read(4096);
-	while (str.length > 0) {
-		dataString += str;
-		str = sstream.read(4096);
-	}
+    var pngFile = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
+    pngFile.initWithPath(src);
+    var istream = Components.classes["@mozilla.org/network/file-input-stream;1"].createInstance(Components.interfaces.nsIFileInputStream);
+    istream.init(pngFile, -1, -1, false);
+    var bstream = Components.classes["@mozilla.org/binaryinputstream;1"].createInstance(Components.interfaces.nsIBinaryInputStream);
+    bstream.setInputStream(istream);
+    bstream.readBytes(startoffset);
+    var bytes = bstream.readBytes(length);
 
-	sstream.close();
-	fstream.close();
+    var aFile = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
+    aFile.initWithPath(dest);
+    aFile.createUnique(Components.interfaces.nsIFile.NORMAL_FILE_TYPE, 600);
+    var stream = Components.classes["@mozilla.org/network/safe-file-output-stream;1"].createInstance(Components.interfaces.nsIFileOutputStream);
+    stream.init(aFile, 0x04 | 0x08 | 0x20, 664, 0); // write, create, truncate
+                
+    stream.write(bytes, length);
+    if (stream instanceof Components.interfaces.nsISafeOutputStream) {
+        stream.finish();
+    } else {
+        stream.close();
+    }
 
-	return dataString;
 }
 
 // returns DB details such as redirect, archives and offsets
@@ -308,13 +265,6 @@ function fetchDBDetails( dataDB, articleName ) {
 		result.redirect = statement.getUTF8String(7);
 	}
 	return result;
-}
-
-function globalReplace(source, args) {
-	for (var i = 1; i<=arguments.length -1;i++) {
-		source = source.replace(new RegExp("\\[\\[\\["+arguments[i].var+"\\]\\]\\]", "g"), arguments[i].value);
-	}
-	return source;
 }
 
 ////////////////////////////////////////////////////////////////////
