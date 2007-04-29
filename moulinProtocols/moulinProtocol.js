@@ -99,11 +99,8 @@ function moulinch_aopen (streamListener, context)
 	datarootFD.append(project);
 	dataDB = datarootFD.clone();
 	dataDB.append("index.db");
-	
-	headerFile = docrootFD.clone();
-	headerFile.append("header.html");
-	//footerFile = docrootFD.clone(); // footer is included in data
-	//footerFile.append("footer.html");
+	dataFormat = datarootFD.clone();
+	dataFormat.append("format");
 	
 	dataBaseResult = fetchDBDetails(dataDB, articleName);
 	while (dataBaseResult.redirect != "" && dataBaseResult.redirect != dataBaseResult.articleName) { // should prevent an infinite loop ?
@@ -128,22 +125,60 @@ function moulinch_aopen (streamListener, context)
 		length = -1;
 	else
 		length = dataBaseResult.bstartoff - dataBaseResult.astartoff;
+		
+	// load project-specific configuration
+	format = parseFormat(getFileContent(dataFormat.path));
+	
+	// overwrite nsIChannel settings
+	if (!format.extension)
+		format.extension = "";
+	if (format.type)
+		this.contentType = format.type;
+	if (format.charset)
+		this.contentCharset = format.charset;
+	this.contentLength = length;
+	
+	if (format.header) {
+		var headerFile = docrootFD.clone();
+		headerFile.append(format.header);
+	}
+	if (format.footer) {
+		var footerFile = docrootFD.clone();
+		footerFile.append(format.footer);
+	}
 	
 	archivefile = datarootFD.clone();
-	archivefile.append(dataBaseResult.aarchive+".bz2");
+	archivefile.append(dataBaseResult.aarchive+format.extension);
 
 	var dataString = new String();
-	dataString += getFileContent(headerFile.path).replace("[[[TITLE]]]", dataBaseResult.articleName.replace(/_/g, " "));
-	dataString += moulinComp.retrievePageContent(archivefile.path, dataBaseResult.astartoff, length - 1);
-	//dataString += getFileContent(footerFile.path);
+	if (format.header)
+		dataString += globalReplace(getFileContent(headerFile.path), {var:"TITLE", value:dataBaseResult.articleName.replace(/_/g, " ")});
+	
+	if (format.compression.match(/bzip2/i)) {
+		dataString += moulinComp.retrieveBzip2Content(archivefile.path, dataBaseResult.astartoff, length);
+	} else if (format.compression.match(/gzip/i)) {
+		dataString += moulinComp.retrieveGzipContent(archivefile.path, dataBaseResult.astartoff, length);
+	} else { // no compression
+		try {
+		dataString += getContentOfFile(archivefile.path, dataBaseResult.astartoff, length);
+		}catch(e) { prompt.alert("ff", e); }
+	}
+	
+	if (format.footer)
+		dataString += getFileContent(footerFile.path);
 
-	var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
-	converter.charset =  "UTF-8";
-	var dataStringUTF8 = converter.ConvertFromUnicode(dataString);
+	if (format.newcharset) {
+		var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
+		converter.charset =  format.newcharset;
+		var dataStringEncoded = converter.ConvertFromUnicode(dataString);
+	} else {
+		var dataStringEncoded = dataString;
+	}
+	
 	try {
-		this.respond(dataStringUTF8);
+		this.respond(dataStringEncoded);
 	} catch(ex) {
-		dump("error aopen");
+		dump("error aopen: "+ex);
 	}
 }
 
@@ -271,6 +306,24 @@ function getFileContent(fileName) {
 	return dataString;
 }
 
+function getContentOfFile(fileName, startoffset, length) {
+	var dataString = "";
+	var file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
+ 	file.initWithPath(fileName);
+	var fstream = Components.classes["@mozilla.org/network/file-input-stream;1"].createInstance(Components.interfaces.nsIFileInputStream);
+	var sstream = Components.classes["@mozilla.org/scriptableinputstream;1"].createInstance(Components.interfaces.nsIScriptableInputStream);
+	fstream.init(file, -1, 0, 0);
+	sstream.init(fstream); 
+
+	sstream.read(startoffset);
+	dataString = sstream.read(length);
+
+	sstream.close();
+	fstream.close();
+
+	return dataString;
+}
+
 // returns DB details such as redirect, archives and offsets
 function fetchDBDetails( dataDB, articleName ) {
 	var result = {};
@@ -296,6 +349,16 @@ function globalReplace(source, args) {
 		source = source.replace(new RegExp("\\[\\[\\["+arguments[i].var+"\\]\\]\\]", "g"), arguments[i].value);
 	}
 	return source;
+}
+
+function parseFormat(formatString) {
+	var format = {};
+	var formatA = formatString.split("\n");
+	for (var i=0;i<formatA.length;i++) {
+		var si = formatA[i].indexOf(":");
+		format[formatA[i].substr(0, si)] = formatA[i].substr(si+1, formatA[i].length);
+	}
+	return format;
 }
 
 ////////////////////////////////////////////////////////////////////
