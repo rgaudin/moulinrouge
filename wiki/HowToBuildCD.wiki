@@ -35,6 +35,8 @@ Edit {{{/etc/portage/package.mask}}} to block mysql version :
 
 {{{
 USE="big-tables -berkdb" emerge dev-db/mysql
+/usr/bin/mysql_install_db
+/etc/init.d/mysql start
 /usr/bin/mysqladmin -uroot password moulin
 rc-update add mysql default
 }}}
@@ -92,7 +94,6 @@ USE="latex" emerge dev-lang/ocaml
 emerge tetex
 emerge cjk-latex
 USE="png truetype" emerge dvipng
-emerge =app-text/dvipng-1.7
 }}}
 
 == Subversion ==
