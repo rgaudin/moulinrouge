@@ -10,4 +10,4 @@
 <!ENTITY moulin.searchInPage "بحث في الصفحة الحالية">
 <!ENTITY moulin.sizeUp		"نص أكبر">
 <!ENTITY moulin.sizeDown	"نص أصغر">
-<!ENTITY moulin.dir    		"ltr">
+<!ENTITY moulin.dir    		"rtl">
