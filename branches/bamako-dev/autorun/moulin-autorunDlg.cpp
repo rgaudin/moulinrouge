@@ -1,45 +1,50 @@
-// autorunDlg.cpp : implementation file
+// moulin-autorunDlg.cpp : implementation file
 //
 
 #include "stdafx.h"
-#include "autorun.h"
-#include "autorunDlg.h"
+#include "moulin-autorun.h"
+#include "moulin-autorunDlg.h"
+#include "lang_en.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
 
-// CautorunDlg dialog
+// CmoulinautorunDlg dialog
 
 
 
 
-CautorunDlg::CautorunDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CautorunDlg::IDD, pParent)
+CmoulinautorunDlg::CmoulinautorunDlg(CWnd* pParent /*=NULL*/)
+	: CDialog(CmoulinautorunDlg::IDD, pParent)
 {
-	EnableActiveAccessibility();
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
 
-void CautorunDlg::DoDataExchange(CDataExchange* pDX)
+void CmoulinautorunDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_LAUNCH, launch_btn);
+	DDX_Control(pDX, IDC_INSTALL, install_btn);
+	DDX_Control(pDX, IDC_READ, help_btn);
+	DDX_Control(pDX, IDC_QUIT, quit_btn);
 }
 
-BEGIN_MESSAGE_MAP(CautorunDlg, CDialog)
+BEGIN_MESSAGE_MAP(CmoulinautorunDlg, CDialog)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	//}}AFX_MSG_MAP
-	ON_BN_CLICKED(IDLAUNCH, &CautorunDlg::OnBnClickedLaunch)
-	ON_BN_CLICKED(IDINSTALL, &CautorunDlg::OnBnClickedInstall)
-	ON_BN_CLICKED(IDHELP, &CautorunDlg::OnBnClickedHelp)
+	ON_BN_CLICKED(IDC_LAUNCH, &CmoulinautorunDlg::OnBnClickedLaunch)
+	ON_BN_CLICKED(IDC_INSTALL, &CmoulinautorunDlg::OnBnClickedInstall)
+	ON_BN_CLICKED(IDC_READ, &CmoulinautorunDlg::OnBnClickedHelp)
+	ON_BN_CLICKED(IDC_QUIT, &CmoulinautorunDlg::OnBnClickedQuit)
 END_MESSAGE_MAP()
 
 
-// CautorunDlg message handlers
+// CmoulinautorunDlg message handlers
 
-BOOL CautorunDlg::OnInitDialog()
+BOOL CmoulinautorunDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
@@ -48,7 +53,12 @@ BOOL CautorunDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
-	// TODO: Add extra initialization here
+	// change UI lang strings
+	this->SetWindowTextW(main_win_title);
+	launch_btn.SetWindowTextW(launch_btn_title);
+	install_btn.SetWindowTextW(install_btn_title);
+	help_btn.SetWindowTextW(help_btn_title);
+	quit_btn.SetWindowTextW(quit_btn_title);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -57,7 +67,7 @@ BOOL CautorunDlg::OnInitDialog()
 //  to draw the icon.  For MFC applications using the document/view model,
 //  this is automatically done for you by the framework.
 
-void CautorunDlg::OnPaint()
+void CmoulinautorunDlg::OnPaint()
 {
 	if (IsIconic())
 	{
@@ -84,27 +94,31 @@ void CautorunDlg::OnPaint()
 
 // The system calls this function to obtain the cursor to display while the user drags
 //  the minimized window.
-HCURSOR CautorunDlg::OnQueryDragIcon()
+HCURSOR CmoulinautorunDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
 
-void CautorunDlg::OnBnClickedLaunch()
+void CmoulinautorunDlg::OnBnClickedLaunch()
 {
-	// Launch the moulin browser
 	WinExec("..\\moulin\\moulin.exe", SW_SHOWMAXIMIZED);
 }
 
-void CautorunDlg::OnBnClickedInstall()
+void CmoulinautorunDlg::OnBnClickedInstall()
 {
 	WinExec("..\\installer\\moulin-setup.exe", SW_SHOWNORMAL);
 }
 
-void CautorunDlg::OnBnClickedHelp()
+void CmoulinautorunDlg::OnBnClickedHelp()
 {
 	LPCTSTR url = _T("..\\README.html");
 	CString args;
 	args.Format(_T("url.dll,FileProtocolHandler %s"), url);
 	ShellExecute(NULL, _T("open"), _T("rundll32.exe"), args, NULL, SW_SHOWNORMAL);
+}
+
+void CmoulinautorunDlg::OnBnClickedQuit()
+{
+	this->DestroyWindow();
 }

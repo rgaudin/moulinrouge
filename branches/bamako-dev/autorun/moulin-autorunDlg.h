@@ -1,18 +1,19 @@
-// autorunDlg.h : header file
+// moulin-autorunDlg.h : header file
 //
 
 #pragma once
+#include "afxwin.h"
 
 
-// CautorunDlg dialog
-class CautorunDlg : public CDialog
+// CmoulinautorunDlg dialog
+class CmoulinautorunDlg : public CDialog
 {
 // Construction
 public:
-	CautorunDlg(CWnd* pParent = NULL);	// standard constructor
+	CmoulinautorunDlg(CWnd* pParent = NULL);	// standard constructor
 
 // Dialog Data
-	enum { IDD = IDD_AUTORUN_DIALOG };
+	enum { IDD = IDD_MOULINAUTORUN_DIALOG };
 
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
@@ -28,9 +29,19 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
+	CButton launch_btn;
+public:
+	CButton install_btn;
+public:
+	CButton help_btn;
+public:
+	CButton quit_btn;
+public:
 	afx_msg void OnBnClickedLaunch();
 public:
 	afx_msg void OnBnClickedInstall();
 public:
 	afx_msg void OnBnClickedHelp();
+public:
+	afx_msg void OnBnClickedQuit();
 };

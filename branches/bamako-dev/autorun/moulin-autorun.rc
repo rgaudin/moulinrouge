@@ -48,7 +48,7 @@ BEGIN
     "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
     "LANGUAGE 9, 1\r\n"
     "#pragma code_page(1252)\r\n"
-    "#include ""res\\autorun.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""res\\moulinautorun.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
     "#include ""afxres.rc""     // Standard components\r\n"
     "#endif\r\n"
     "\0"
@@ -65,6 +65,25 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDR_MAINFRAME           ICON                    "res\\moulin.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_MOULINAUTORUN_DIALOG DIALOGEX 0, 0, 281, 237
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "moulin - offline Wikipedia"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    CONTROL         130,IDC_STATIC,"Static",SS_BITMAP,7,7,268,149,WS_EX_STATICEDGE
+    PUSHBUTTON      "Launch moulin now !",IDC_LAUNCH,7,160,267,14
+    PUSHBUTTON      "Install moulin to your HDD",IDC_INSTALL,7,178,267,14
+    PUSHBUTTON      "Read the Getting Started Guide",IDC_READ,7,196,267,14
+    PUSHBUTTON      "Leave this menu",IDC_QUIT,7,215,267,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -86,68 +105,23 @@ VS_VERSION_INFO VERSIONINFO
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
-        BLOCK "042904e4"
+        BLOCK "000004e4"
         BEGIN
             VALUE "CompanyName", "Kunnafoni Foundation"
             VALUE "FileDescription", "Autorun for the moulin distribution"
             VALUE "FileVersion", "1.0.0.1"
-            VALUE "InternalName", "autorun.exe"
-            VALUE "LegalCopyright", "(c) Kunnafoni Foundation and individual contributors."
-            VALUE "LegalTrademarks", "This software is released under the GNU GPL."
-            VALUE "OriginalFilename", "autorun.exe"
+            VALUE "InternalName", "moulin-autorun.exe"
+            VALUE "LegalCopyright", "(c) Kunnafoni Foundation and contributors."
+            VALUE "LegalTrademarks", "Released under GPL."
+            VALUE "OriginalFilename", "moulin-autorun.exe"
             VALUE "ProductName", "moulin-autorun"
             VALUE "ProductVersion", "1.0.0.1"
         END
     END
     BLOCK "VarFileInfo"
     BEGIN
-        VALUE "Translation", 0x429, 1252
+        VALUE "Translation", 0x0, 1252
     END
-END
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Bitmap
-//
-
-IDB_BITMAP_EN           BITMAP                  "res\\splash_en.bmp"
-#endif    // English (U.S.) resources
-/////////////////////////////////////////////////////////////////////////////
-
-
-/////////////////////////////////////////////////////////////////////////////
-// Farsi resources
-
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_FAR)
-#ifdef _WIN32
-LANGUAGE LANG_FARSI, SUBLANG_DEFAULT
-#pragma code_page(1256)
-#endif //_WIN32
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Bitmap
-//
-
-IDB_BITMAP_FA           BITMAP                  "res\\splash_fa.bmp"
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Dialog
-//
-
-IDD_AUTORUN_DIALOG DIALOGEX 0, 0, 282, 239
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
-EXSTYLE WS_EX_APPWINDOW | WS_EX_LAYOUTRTL
-CAPTION "?????????? ???? ??"
-FONT 8, "MS Shell Dlg", 0, 0, 0x1
-BEGIN
-    DEFPUSHBUTTON   "??? ??????? moulin",IDLAUNCH,7,159,268,16,0,WS_EX_RTLREADING
-    PUSHBUTTON      "???? ?? ???????",IDCANCEL,7,216,268,16,0,WS_EX_RTLREADING
-    CONTROL         133,IDC_STATIC,"Static",SS_BITMAP | SS_SUNKEN,7,7,268,149
-    PUSHBUTTON      "??? moulin ?? ???????? ???? ???",IDINSTALL,7,177,268,16,0,WS_EX_RTLREADING
-    PUSHBUTTON      "????? ??????? ????",IDHELP,7,196,268,16,0,WS_EX_RTLREADING
 END
 
 
@@ -159,36 +133,26 @@ END
 #ifdef APSTUDIO_INVOKED
 GUIDELINES DESIGNINFO 
 BEGIN
-    IDD_AUTORUN_DIALOG, DIALOG
+    IDD_MOULINAUTORUN_DIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 275
+        RIGHTMARGIN, 274
         TOPMARGIN, 7
-        BOTTOMMARGIN, 232
+        BOTTOMMARGIN, 230
     END
 END
 #endif    // APSTUDIO_INVOKED
 
-#endif    // Farsi resources
-/////////////////////////////////////////////////////////////////////////////
-
-
-/////////////////////////////////////////////////////////////////////////////
-// Arabic (Syria) resources
-
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ARS)
-#ifdef _WIN32
-LANGUAGE LANG_ARABIC, SUBLANG_ARABIC_SYRIA
-#pragma code_page(1256)
-#endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Bitmap
 //
 
-IDB_BITMAP_AR           BITMAP                  "res\\splash_ar.bmp"
-#endif    // Arabic (Syria) resources
+IDB_SPLASH_en           BITMAP                  "res\\splash_en.bmp"
+IDB_SPLASH_fa           BITMAP                  "res\\splash_fa.bmp"
+IDB_SPLASH_ar           BITMAP                  "res\\splash_ar.bmp"
+#endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
@@ -206,7 +170,7 @@ IDB_BITMAP_AR           BITMAP                  "res\\splash_ar.bmp"
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE 9, 1
 #pragma code_page(1252)
-#include "res\autorun.rc2"  // non-Microsoft Visual C++ edited resources
+#include "res\moulinautorun.rc2"  // non-Microsoft Visual C++ edited resources
 #include "afxres.rc"     // Standard components
 #endif
 

@@ -1,4 +1,4 @@
-// autorun.h : main header file for the PROJECT_NAME application
+// moulin-autorun.h : main header file for the PROJECT_NAME application
 //
 
 #pragma once
@@ -10,14 +10,14 @@
 #include "resource.h"		// main symbols
 
 
-// CautorunApp:
-// See autorun.cpp for the implementation of this class
+// CmoulinautorunApp:
+// See moulin-autorun.cpp for the implementation of this class
 //
 
-class CautorunApp : public CWinApp
+class CmoulinautorunApp : public CWinApp
 {
 public:
-	CautorunApp();
+	CmoulinautorunApp();
 
 // Overrides
 	public:
@@ -28,4 +28,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-extern CautorunApp theApp;
+extern CmoulinautorunApp theApp;
