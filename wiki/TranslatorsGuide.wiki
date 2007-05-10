@@ -52,7 +52,7 @@ echo "CREATE DATABASE fr_encyclopedia;" | mysql -ufr -pfr
 mysql -ufr -pfr  moulin_fr < /usr/local/moulin/archives/tables_isam.sql
 }}}
 
-Edit {{{dump2db.cs]}}} to reflect your mysql path, login, database and password.
+Edit {{{dump2db_encyclopedia.cs}}} to reflect your mysql path, login, database and password.
 {{{
 cd /usr/local/moulin/fr
 
