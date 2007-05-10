@@ -1,0 +1,88 @@
+#summary Guide for moulin tranlators
+
+= Who is this guide for ? =
+This guide targets people who want to provide a localized version of moulin for a specific language.
+This guide targets people who wants to contribute directl to the moulin project and so, agreed to work on our server (pumbaa).
+If you want to work on your machine, you should prepare your setup as described in HowToBuildCD.
+
+= Request an access =
+Wether you want to start the work on a locale or want to help on an existing one, you should present yourself on the google-group (mailing list). Tell us which language you want to contribute to and if you have basic Linux knowledge.
+
+You will receive a user account to the pumbaa server.
+
+= The basics =
+Here are a few rules you should apply:
+- don't hurt the server: we are already busy working on moulin ; we can't waste time working on the server itself.
+- don't share your password: everybody which is abilited to work on the server has it's own login/password.
+- Always work on a group-context:
+Each translator is member of the `translators` group plus one or more lang-specific groups. For example:
+{{{
+reg@pumbaa ~ $ groups reg
+translators translators.ar translators.fr translators.fa
+}}}
+So, when you are working on a specific language, remember to always set permissions to your group (umask 2-like).
+{{{
+mkdir test
+chgrp translators.ar test
+chmod g+rwxs test
+}}}
+
+= Setting up the environment =
+This section applies to people who are starting a lang and have basic Linux knowledge (if it's not your case, someone has already done that for you).
+
+== Get the dump ==
+
+Go to [http://download.wikimedia.org/frwiki/latest/] replacing frwiki by xxx where xxx represent the language code and project name of your target CD.
+This Guide assumes you are building the Wikipedia in French (frwiki).
+Download the file {{{xxwiki-latest-pages-articles.xml.bz2}}} and place it into {{{/usr/local/moulin}}}
+
+{{{
+bunzip2 frwiki-latest-pages-articles.xml.bz2
+}}}
+
+
+== Database ==
+
+With your account comes a lang-specific Mysql account. It's login and password are set to the lang code. For example, to log in as french: `{{{mysql -ufr -pfr}}}`
+You can then create or work on any database which name starts with fr_.
+
+Now, create a database for the project:
+{{{
+echo "CREATE DATABASE fr_encyclopedia;" | mysql -ufr -pfr
+mysql -ufr -pfr  moulin_fr < /usr/local/moulin/archives/tables_isam.sql
+}}}
+
+Edit {{{dump2db.cs]}}} to reflect your mysql path, login, database and password.
+{{{
+cd /usr/local/moulin/fr
+
+wget http://download.wikimedia.org/frwiki/latest/frwiki-latest-categorylinks.sql
+wget http://download.wikimedia.org/frwiki/latest/frwiki-latest-externallinks.sql
+wget http://download.wikimedia.org/frwiki/latest/frwiki-latest-imagelinks.sql
+wget http://download.wikimedia.org/frwiki/latest/frwiki-latest-interwiki.sql
+wget http://download.wikimedia.org/frwiki/latest/frwiki-latest-langlinks.sql
+wget http://download.wikimedia.org/frwiki/latest/frwiki-latest-redirect.sql
+wget http://download.wikimedia.org/frwiki/latest/frwiki-latest-templatelinks.sql
+
+sed -i -e 's/) TYPE=InnoDB;/) TYPE=MyISAM;/' *.sql
+
+mysql -ufr -pfr fr_encyclopedia < frwiki-latest-categorylinks.sql 
+mysql -ufr -pfr fr_encyclopedia < frwiki-latest-externallinks.sql 
+mysql -ufr -pfr fr_encyclopedia < frwiki-latest-imagelinks.sql 
+mysql -ufr -pfr fr_encyclopedia < frwiki-latest-interwiki.sql 
+mysql -ufr -pfr fr_encyclopedia < frwiki-latest-langlinks.sql 
+mysql -ufr -pfr fr_encyclopedia < frwiki-latest-redirect.sql 
+mysql -ufr -pfr fr_encyclopedia < frwiki-latest-templatelinks.sql 
+
+cp /usr/local/moulin/archives/dump2db_sample.cs dump2db_encyclopedia.cs
+cp /usr/local/moulin/archives/lang_sample.cs fr_encyclopedia.cs
+gmcs dump2db_encyclopedia.cs fr_encyclopedia.cs
+mono ./dump2db_encyclopedia.exe frwiki-latest-pages-articles.xml
+}}}
+
+Replace fr_encyclopedia.cs by the file representing your target's language code. If this file doesn't exists, create it by from another language and replace Namespaces by the ones you'll found in the first (40) lines of the xml dump. ({{{head -n 40 frwiki-latest-pages-articles.xml}}})
+
+== MediaWiki ==
+
+
+
