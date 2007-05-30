@@ -49,7 +49,7 @@ You can then create or work on any database which name starts with fr_.
 Now, create a database for the project:
 {{{
 echo "CREATE DATABASE fr_encyclopedia;" | mysql -ufr -pfr
-mysql -ufr -pfr  moulin_fr < /usr/local/moulin/archives/tables_isam.sql
+mysql -ufr -pfr  fr_encyclopedia < /usr/local/moulin/archives/tables_isam.sql
 }}}
 
 Edit {{{dump2db_encyclopedia.cs}}} to reflect your mysql path, login, database and password.
@@ -83,6 +83,5 @@ mono ./dump2db_encyclopedia.exe frwiki-latest-pages-articles.xml
 Replace fr_encyclopedia.cs by the file representing your target's language code. If this file doesn't exists, create it by from another language and replace Namespaces by the ones you'll found in the first (40) lines of the xml dump. ({{{head -n 40 frwiki-latest-pages-articles.xml}}})
 
 == MediaWiki ==
-
 
 
