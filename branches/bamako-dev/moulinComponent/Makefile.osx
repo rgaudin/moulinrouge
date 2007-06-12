@@ -17,14 +17,14 @@ universal: i386 ppc
 	rm moulin-ppc.dylib
 	rm moulin-i386.dylib
 
-i386: nsIMoulin.h nsMoulin.cpp
-	 $(CXX) -arch i386 -Os -c -o moulin-i386.o $(GECKO_DEFS) -I $(GECKO_SDK)-i386/include  -I /Volumes/Hobbes/mozilla/mozilla/obj-xulrunner/i386/xpcom -I /usr/include nsMoulin.cpp $(CXXFLAGS)
+i386: nsIMoulin.h moulin.cpp
+	 $(CXX) -arch i386 -Os -c -o moulin-i386.o $(GECKO_DEFS) -I $(GECKO_SDK)-i386/include  -I /Volumes/Hobbes/mozilla/mozilla/obj-xulrunner/i386/xpcom -I /usr/include moulin.cpp $(CXXFLAGS)
 	 $(CXX) -arch i386 -dynamiclib -o moulin-i386.dylib $(GECKO_DEFS) moulin-i386.o -L$(GECKO_SDK)-i386/lib -L/Volumes/Hobbes/mozilla/mozilla/obj-xulrunner/i386/dist/lib -Wl,-executable_path,/Library/Frameworks/XUL.framework/Versions/Current $(LDFLAGS) -framework CoreFoundation -framework XUL /usr/lib/libbz2.dylib /usr/lib/libz.dylib
 	chmod +x moulin-i386.dylib
 	rm moulin-i386.o
 
-ppc: nsIMoulin.h nsMoulin.cpp
-	 $(CXX) -arch ppc -Os -c -o moulin-ppc.o $(GECKO_DEFS) -I $(GECKO_SDK)-ppc/include -I /Volumes/Hobbes/mozilla/mozilla/obj-xulrunner/ppc/xpcom -I /usr/include nsMoulin.cpp $(CXXFLAGS)
+ppc: nsIMoulin.h moulin.cpp
+	 $(CXX) -arch ppc -Os -c -o moulin-ppc.o $(GECKO_DEFS) -I $(GECKO_SDK)-ppc/include -I /Volumes/Hobbes/mozilla/mozilla/obj-xulrunner/ppc/xpcom -I /usr/include moulin.cpp $(CXXFLAGS)
 	 $(CXX) -arch ppc -dynamiclib -o moulin-ppc.dylib $(GECKO_DEFS) moulin-ppc.o -L$(GECKO_SDK)-ppc/lib -L/Volumes/Hobbes/mozilla/mozilla/obj-xulrunner/ppc/dist/lib -Wl,-executable_path,/Library/Frameworks/XUL.framework/Versions/Current $(LDFLAGS) -framework CoreFoundation -framework XUL /usr/lib/libbz2.dylib /usr/lib/libz.dylib
 	chmod +x moulin-ppc.dylib
 	rm moulin-ppc.o
