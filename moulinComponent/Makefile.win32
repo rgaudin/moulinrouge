@@ -1,6 +1,6 @@
 # Microsoft Developer Studio Generated NMAKE File, Based on moulin.dsp
 !IF "$(CFG)" == ""
-CFG=moulin - Win32 Debug
+CFG=moulin - Win32 Release
 !MESSAGE No configuration specified. Defaulting to moulin - Win32 Debug.
 !ENDIF 
 
