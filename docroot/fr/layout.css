@@ -1,0 +1,228 @@
+/* real CSS styles for well behaved browsers */
+/* hicksdesign.co.uk */
+
+/* Grid system: 85px/15px */
+
+/* import CSS for compliant browsers */
+/* ------------------------------------------------------- */
+@import url(typography2.css);
+
+
+/* stops the nasty horizontal shift with centered layouts in moz etc */
+html { height: 100%; margin-bottom: 1px; }
+
+/* overrule basic.css styles */
+body {
+	background-color: #f2f2f2 !important; 
+	padding: 0 0 60px 0;
+	}
+
+
+/* positioning */
+
+/* Clear fix */
+.clear:after {
+    content: "."; 
+    display: block; 
+    height: 0; 
+    clear: both; 
+    visibility: hidden;
+}
+
+/* no need to hide from IE5 Mac as its filtered out anyway */
+.clear {display:inline-block;}
+
+#wrapper {
+	width: 780px;
+	background: #fff;
+	margin: 0 auto 0 auto;
+	border: 1px solid #e0e0e0;
+	border-top:0;
+	position: relative;
+	z-index: 1;
+}
+
+#header,
+#content,
+#footer {
+	width: 674px;
+	clear: both;
+	margin: 0 auto;
+	position: relative;
+}
+
+#logo {
+	margin: 10px 0 0 -15px;
+}
+
+#nav {
+	margin: -15px 0 0 100px;
+}
+
+#nav a {
+	display: block;
+	background-color: #ddd;
+	background-repeat: repeat-x;
+	background-position: 0% -1.3em;
+	float: left;
+	text-decoration: none;
+	line-height: 2em;
+	text-align: center;
+	color: #990000;
+	font-size: 13px;
+	padding:0 20px 0 20px;
+}
+
+#nav a:hover {
+	background-color: #999;
+	color: #fff;
+}
+
+#home .n-home a,
+#quality .n-quality a,
+#contribute .n-cont a,
+#selection .n-selection a,
+#credits .n-credits a,
+#help .n-help a {
+ color: #fff;
+ background-color: #990000;
+}
+
+#nav li {
+ display:inline;
+}
+
+#search {
+	background-color: #990000;
+	margin: 0;
+	padding: 0 55px;
+	position: relative;
+}
+
+#home #search {
+	background-color: #990000;
+}
+
+
+#content {
+	margin: 0 auto;
+}
+
+#footer {
+	padding: 1.5em 0;
+	border-top: 1px solid #ccc;
+	overflow: auto;
+}
+
+#footer p {
+	font-size: 10px;
+	color: #666;
+	width: 650px;
+	float: left;
+	margin: 0 15px 0 0;
+}
+
+#footer p:first-line {
+	font-weight: bold;
+	font-size: 12px;
+	color: #333;
+}
+
+#footer ul {
+	font-size: 10px;
+	color: #666;
+	margin: 0;
+	padding: 0;
+}
+
+#footer li {
+	display: inline;
+}
+
+#footer li {
+	margin: 0 5px 0 0;
+	padding: 0 3px 0 0;
+	border-right: 1px solid #ccc;
+}
+
+#footer li.last {
+	border-right: 0 !important;
+	}
+
+
+/* misc styles */
+
+img {
+	display: block;
+	border: 0;
+	margin: 6px 0;
+}
+
+img .inline {
+	display: inline;
+}
+
+.hide  {
+	display: none;
+}
+.fr {
+	float: right;
+	margin: 0 0 6px 15px;
+}
+.fl {
+	float: left;
+}
+.nowrap {
+	white-space: nowrap;
+}
+
+/* */
+#search-go { width:auto; margin:10px 20px 30px 0; }
+#search h2 { padding-top:.5em; }
+#search-query, #project { width:250px; margin:10px 10px 30px 0; }
+#search p { color:white; }
+input, select { color: black; }
+
+#nav2 {
+	margin: -18px 0 0 0;
+	width:745px;
+	background-color: #ddd;
+	background-repeat: repeat-x;
+	background-position: 0% -1.3em;
+	padding-left:35px;
+}
+
+#nav2 a {
+	display: block;
+	float: left;
+	text-decoration: none;
+	line-height: 2em;
+	text-align: center;
+	color: #990000;
+	font-size: 13px;
+	padding:0 20px 0 20px;
+}
+
+#nav2 a:hover {
+	color: #333;
+}
+
+#selection.portal .n2-portal a,
+#selection.good .n2-good a,
+#selection.category .n2-category a {
+	color: #333;
+}
+
+#nav2 li {
+ display:inline;
+}
+
+#content ul {
+	list-style-type: square;
+}
+
+#content li em {
+	font-style: normal;
+	font-weight: bold;
+}
+
