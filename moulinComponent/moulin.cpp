@@ -61,10 +61,10 @@ nsMoulinImpl::~nsMoulinImpl( )
 NS_IMPL_ISUPPORTS1_CI(nsMoulinImpl, nsIMoulin);
 
 NS_IMETHODIMP
-nsMoulinImpl::RetrieveGzipContent(const char *archivefile, PRUint32 startoffset, PRUint32 length, nsACString & _retval)
+nsMoulinImpl::RetrieveGzipContent(const char *archivefile, PRUint32 startoffset, PRInt32 length, nsACString & _retval)
 {
-	int     so = startoffset; //startoffset;
-	int     len = length; //length;
+	long     so = startoffset; //startoffset;
+	long     len = length; //length;
 	int     rem = 0;
 	int     i = 0;
 
@@ -74,7 +74,12 @@ nsMoulinImpl::RetrieveGzipContent(const char *archivefile, PRUint32 startoffset,
 	gzFile infile = gzopen(archivefile, "rb");
 
 	char buffer[131072];
-	char *buffer2 = new char[len];
+	char *buffer2;
+	if (len == -1) {
+		buffer2 = new char[131072];
+	 } else {
+		buffer2 = new char[len];
+	}
 	int num_read = 0;
 
 	while ( i <= nl + 1) {
@@ -83,33 +88,45 @@ nsMoulinImpl::RetrieveGzipContent(const char *archivefile, PRUint32 startoffset,
 		}
 		if (i == nl + 1) {
 			num_read = gzread(infile, buffer, rem);
-
-			num_read = gzread(infile, buffer2, len);
 		}
 		i++;
 	}
+	
+	if (len == -1) { // last article in ark
+		while (num_read != 0) {
+			num_read = gzread(infile, buffer2, 131072);
+			_retval.Append(buffer2, num_read);
+		}
+	} else {
+		num_read = gzread(infile, buffer2, len);
+		_retval.Append(buffer2, num_read);
+	}
+	
 	gzclose(infile);
-
-	_retval.Append(buffer2, num_read);
     
 	return NS_OK;
 }
 
 NS_IMETHODIMP
 
-nsMoulinImpl::RetrieveBzip2Content(const char *archivefile, PRUint32 startoffset, PRUint32 length, nsACString & _retval)
+nsMoulinImpl::RetrieveBzip2Content(const char *archivefile, PRUint32 startoffset, PRInt32 length, nsACString & _retval)
 {
 	FILE*   f;
 	BZFILE* b;
-	int     nBuf;
+	long     nBuf;
 	char    buf[ 131072 ];
 	int     bzerror;
-	int     so = startoffset;
-	int     len = length;
+	long     so = startoffset;
+	long     len = length;
 	int     rem = 0;
 	int     i = 0;
 
-	char *buf2 = new char[len];
+	char *buf2;
+	if (len == -1) {
+		buf2 = new char[131072];
+	 } else {
+		buf2 = new char[len];
+	}
 
 	f = fopen ( archivefile, "rb" );
 	if ( !f ) {
@@ -135,14 +152,20 @@ nsMoulinImpl::RetrieveBzip2Content(const char *archivefile, PRUint32 startoffset
 		}
 		if (i == nl + 1) {
 			nBuf = BZ2_bzRead ( &bzerror, b, buf, rem );
-			nBuf = BZ2_bzRead ( &bzerror, b, buf2, len );
-			if ( bzerror == BZ_OK ) {
-				// add buff2 to output buffer
-				_retval.Append(buf2, nBuf);
-			}
 		}
 		i++;
 	}
+	
+	if (len == -1) { // last article in ark
+		while (bzerror == BZ_OK) {
+			nBuf = BZ2_bzRead ( &bzerror, b, buf2, 131072 );
+			_retval.Append(buf2, nBuf);
+		}
+	} else {
+		nBuf = BZ2_bzRead ( &bzerror, b, buf2, len );
+		_retval.Append(buf2, nBuf);
+	}
+	
 	if ( bzerror != BZ_STREAM_END ) {
 		BZ2_bzReadClose ( &bzerror, b );
 		// handle error
