@@ -116,7 +116,7 @@ $out.puts "
 ;
 "
 	$files.each do |f|
-		$out.puts "\tDelete \"#{f[0]}\""
+		$out.puts "\tDelete \"#{f[2]}\""
 	end
     $dirs.reverse_each do |d|
 		$out.puts "\tRMDir \"#{d}\""
@@ -135,7 +135,7 @@ def recurs_display(dir)
 			#$out.puts "\tCreateDirectory `#{$copy_dest_path}#{wd}`"
 			recurs_display(fp)
 		else
-			$files << ["#{$copy_source_path}#{wd}", "#{$copy_dest_path}#{wdd}"]
+			$files << ["#{$copy_source_path}#{wd}", "#{$copy_dest_path}#{wdd}", "#{$copy_dest_path}#{wd}"]
 			#$out.puts "\t\tCopyFiles `#{$copy_source_path}#{wd}` `#{$copy_dest_path}#{wdd}`"
 		end
 	end
