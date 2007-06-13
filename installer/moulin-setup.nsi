@@ -3,7 +3,7 @@
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "moulin"
 !define PRODUCT_VERSION "1.0"
-!define PRODUCT_PUBLISHER "Kunnafuni Foundation"
+!define PRODUCT_PUBLISHER "Kunnafoni Foundation"
 !define PRODUCT_WEB_SITE "http://www.moulinwiki.org"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
@@ -24,7 +24,7 @@
 ; Welcome page
 !insertmacro MUI_PAGE_WELCOME
 ; License page
-!insertmacro MUI_PAGE_LICENSE "..\moulin\LICENCE"
+!insertmacro MUI_PAGE_LICENSE "..\moulin\COPYING"
 ; Directory page
 !insertmacro MUI_PAGE_DIRECTORY
 ; Instfiles page
@@ -69,12 +69,23 @@ Section "MainSection" SEC01
 ; /!\ You also need to include this files list into the uninstall section.
 ;  CopyFiles `..\moulin\sample` `$INSTDIR`
 
+	CreateDirectory `\documentation`
+	CreateDirectory `\documentation\imgs`
+	CopyFiles `..\documentation\imgs\boostbook.css` `\documentation\imgs`
+	CopyFiles `..\documentation\imgs\docutils.css` `\documentation\imgs`
+	CopyFiles `..\documentation\imgs\main.css` `\documentation\imgs`
+	CopyFiles `..\documentation\imgs\toolbar.png` `\documentation\imgs`
+	CopyFiles `..\documentation\imgs\welcom.png` `\documentation\imgs`
+	CopyFiles `..\documentation\imgs\wikipediabymoulin.png` `\documentation\imgs`
+	CopyFiles `..\documentation\imgs\README.html` `\documentation`
+
 SectionEnd
 
 Section -AdditionalIcons
   SetOutPath $INSTDIR
   WriteIniStr "$INSTDIR\${PRODUCT_NAME}.url" "InternetShortcut" "URL" "${PRODUCT_WEB_SITE}"
   CreateDirectory "$SMPROGRAMS\moulin"
+  CreateShortCut "$SMPROGRAMS\moulin\README.lnk" "$INSTDIR\documentation\README.html"
   CreateShortCut "$SMPROGRAMS\moulin\Website.lnk" "$INSTDIR\${PRODUCT_NAME}.url"
   CreateShortCut "$SMPROGRAMS\moulin\Uninstall.lnk" "$INSTDIR\uninst.exe"
 SectionEnd
@@ -105,10 +116,22 @@ Section Uninstall
 ; you can use the ruby script file-list.rb to generate this list.
 ;  Delete "$INSTDIR\sample"
 
+	Delete "\documentation\imgs\boostbook.css"
+	Delete "\documentation\imgs\docutils.css"
+	Delete "\documentation\imgs\main.css"
+	Delete "\documentation\imgs\toolbar.png"
+	Delete "\documentation\imgs\welcom.png"
+	Delete "\documentation\imgs\wikipediabymoulin.png"
+	Delete "\documentation\imgs\README.html"
+	RMDir "\documentation\imgs"
+	RMDir "\documentation"
+
+
   Delete "$INSTDIR\${PRODUCT_NAME}.url"
   Delete "$INSTDIR\uninst.exe"
 
   Delete "$SMPROGRAMS\moulin\Uninstall.lnk"
+  Delete "$SMPROGRAMS\moulin\README.lnk"
   Delete "$SMPROGRAMS\moulin\Website.lnk"
 
   RMDir "$SMPROGRAMS\moulin"
