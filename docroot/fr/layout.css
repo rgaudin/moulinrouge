@@ -14,7 +14,7 @@ html { height: 100%; margin-bottom: 1px; }
 /* overrule basic.css styles */
 body {
 	background-color: #f2f2f2 !important; 
-	padding: 0 0 60px 0;
+	padding: 0 0 20px 0;
 	}
 
 
@@ -52,7 +52,7 @@ body {
 }
 
 #logo {
-	margin: 10px 0 0 -15px;
+	margin: 0px 0 0 -15px;
 }
 
 #nav {
@@ -79,17 +79,24 @@ body {
 }
 
 #home .n-home a,
-#quality .n-quality a,
-#contribute .n-cont a,
-#selection .n-selection a,
+#wikipedia .n-wikipedia a,
+#autres .n-autres a,
 #credits .n-credits a,
 #help .n-help a {
  color: #fff;
  background-color: #990000;
-}
+}moulin - la wikipédia offline 
 
 #nav li {
  display:inline;
+}
+
+#test {
+	height: 10px;
+	background-color: #990000;
+	margin: 0;
+	padding: 0 55px;
+	position: relative;
 }
 
 #search {
@@ -203,13 +210,26 @@ input, select { color: black; }
 	padding:0 20px 0 20px;
 }
 
-#nav2 a:hover {
+#nav2 a:hover, #nav2 li.n2-root a {
 	color: #333;
 }
+#autres.wikiquote.selection .n2-selection a,
+#wikipedia.portal .n2-portal a,
+#wikipedia.good .n2-good a,
+#wikipedia.quality .n2-quality a,
+#wikipedia.category .n2-category a {
+	color: #333;
+}
+	margin: 0;
+	padding: 0 55px;
+	position: relative;
+}
 
-#selection.portal .n2-portal a,
-#selection.good .n2-good a,
-#selection.category .n2-category a {
+#autres.wikiquote.selection .n2-selection a,
+#wikipedia.portal .n2-portal a,
+#wikipedia.good .n2-good a,
+#wikipedia.quality .n2-quality a,
+#wikipedia.category .n2-category a {
 	color: #333;
 }
 
@@ -226,3 +246,79 @@ input, select { color: black; }
 	font-weight: bold;
 }
 
+li.projectlist a {
+	font-size: 1.5em;
+	text-decoration: none;
+	color: black;
+}
+li.projectlist img {
+	border: 0;
+	display: inline;
+	vertical-align: middle;
+}
+
+#content h3 a { 	
+	text-decoration: none;
+	font-size:14px;
+	font-weight:bold;
+	margin:16px 0 2px 0;
+	color: #000;
+}
+
+#content li a {
+	font-weight: normal;
+}
+
+#search-nav {
+	margin: 10px 0 10px 0;
+	width:745px;
+	height:2em;
+	background-color: #ddd;
+	background-repeat: repeat-x;
+	background-position: 0% -1.3em;
+	padding-left:35px;
+}
+
+#search-nav a {
+	display: block;
+	float: left;
+	text-decoration: none;
+	line-height: 2em;
+	text-align: center;
+	color: #990000;
+	font-size: 13px;
+	padding:0 20px 0 20px;
+}
+
+#search-nav a:hover, #search-nav li.n-search-sel a {
+	color: #333;
+}
+
+#search-nav li {
+ display:inline;
+}
+
+#content .leftcol {
+	padding-top:15px;
+	padding-right: 5px;
+	width: 425px;
+	float: left;
+/*	background-color: green;*/
+}
+
+#content .rightcol {
+	padding-left:5px;
+	width: 239px;
+	float: right;
+/*	background-color: blue;*/
+}
+
+#content .rightcol ul {
+	list-style-type: none;
+	margin-left:0;
+}
+
+.rightcol a { font-weight: normal; }
+.leftcol a { text-decoration: none; }
+
+#content ul li img { vertical-aligne: middle; display: inline; }
