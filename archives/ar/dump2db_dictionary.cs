@@ -24,7 +24,7 @@ namespace WikiMoulin {
 		{
 			Process proc = new Process ();
 			proc.StartInfo.FileName = s_cmd;
-			proc.StartInfo.Arguments = "-uroot -pmoulin moulin_eo";
+			proc.StartInfo.Arguments = "-uar -par ar_dictionary";
 			proc.StartInfo.CreateNoWindow = true;
 			proc.StartInfo.UseShellExecute = false;
 			proc.StartInfo.RedirectStandardInput = true;
@@ -49,6 +49,7 @@ namespace WikiMoulin {
 			int index = title.IndexOf (":");
 			int ns = 0;
 			if (index != -1) {
+				//Console.WriteLine(title);
 				if (s_ns.TryGetValue (title.Substring (0, index ), out ns)) {
 					title = title.Substring (index + 1, title.Length - index -1);
 				}
