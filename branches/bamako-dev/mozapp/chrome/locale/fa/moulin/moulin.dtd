@@ -11,3 +11,9 @@
 <!ENTITY moulin.sizeUp      "افزایش اندازه متن">
 <!ENTITY moulin.sizeDown    "کاهش اندازه متن">
 <!ENTITY moulin.dir         "rtl">
+<!ENTITY moulin.toggleFullscreen "Toggle Full Screen mode">
+<!ENTITY moulin.toggleSidebar "Toggle Bookmarks bar">
+<!ENTITY project.encyclopedia "Wikipedia (encyclopédie)">
+<!ENTITY project.books "Wikiquote (citations)">
+<!ENTITY project.quote "Wikibooks (livres pédagogiques)">
+<!ENTITY project.source "Wikisource (oeuvres libres)">

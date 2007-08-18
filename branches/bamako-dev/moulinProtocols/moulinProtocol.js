@@ -19,6 +19,28 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
 
+/*
+ * Mini Logger to output stuff to JS Console.
+ */
+function L () {};
+
+L.info = function (str) {
+	try { 
+		Components.classes['@mozilla.org/consoleservice;1']
+		.getService (Components.interfaces.nsIConsoleService)
+		.logStringMessage (str);
+	} catch (e) {
+		dump ("can't log info via nsIConsoleService: " + e.toString ());
+	}
+}
+
+L.error = function (str) {
+	try {
+		Components.utils.reportError (str);
+	} catch (e) {
+		dump ("can't log error via reportError: " + e.toString ());
+	}
+}
 
 const nsIProtocolHandler   = Components.interfaces.nsIProtocolHandler;
 const nsIURI               = Components.interfaces.nsIURI;
@@ -34,6 +56,7 @@ const MOULIN_PROTOCOL_HANDLER_CTRID = "@mozilla.org/network/protocol;1?name=moul
 function MoulinChannel (uri)
 {
   this.URI = uri;
+
   this.originalURI = uri;
   this._isPending = true; // why?
   this.stringStream = Components.classes["@mozilla.org/io/string-input-stream;1"].createInstance(nsIStringInputStream);
@@ -80,6 +103,8 @@ function moulinch_aopen (streamListener, context)
 	var moulinComp = Components.classes["@kunnafoni.org/cpp_nsMoulin;1"].createInstance(Components.interfaces.nsIMoulin);
 
 	var path = Url.decode(this.URI.path);
+	
+	L.info ('path: '+this.URI.spec);
 
 	var tmp = path.substr(2, path.length); // now should be like encyclopedia/fr/whatever
 	sepI = tmp.indexOf("/");
@@ -88,20 +113,27 @@ function moulinch_aopen (streamListener, context)
 	sepI = tmp.indexOf("/");
 	var lang = tmp.slice(0, sepI);
 	var articleName = tmp.substr(sepI + 1, tmp.length).replace(/ /g, "_");;
+	var ancI = articleName.indexOf ("#")
+	if (ancI != -1) {
+		articleName = articleName.slice (0, ancI);
+	}
 	
 	// we have `project`, `lang` and `articleName` to search DB
 	//prompt.alert("ddd", articleName);
 	
 	var docrootFD = Components.classes["@mozilla.org/file/directory_service;1"].getService(Components.interfaces.nsIProperties).get("resource:app", Components.interfaces.nsIFile);
-	var todocrootpath = "datas/"+lang+"/docroot";
+	var datarootFD = docrootFD.clone ();
+	var todocrootpath = "chrome/locale/"+lang+"/moulin/docroot";
 	for each (var i in todocrootpath.split("/")) { docrootFD.append(i); }
-	var datarootFD = docrootFD.parent;
+	var todataspath = "datas/"+lang;
+	for each (var i in todataspath.split("/")) { datarootFD.append(i); }
 	datarootFD.append(project);
 	dataDB = datarootFD.clone();
 	dataDB.append("index.db");
 	dataFormat = datarootFD.clone();
 	dataFormat.append("format");
 	
+	L.info ('asking '+ dataDB.path +'DB for: '+articleName);
 	dataBaseResult = fetchDBDetails(dataDB, articleName);
 	while (dataBaseResult.redirect != "" && dataBaseResult.redirect != dataBaseResult.articleName) { // should prevent an infinite loop ?
 		//prompt.alert("redirect", "redirecting "+dataBaseResult.articleName+" to "+dataBaseResult.redirect);
@@ -112,13 +144,16 @@ function moulinch_aopen (streamListener, context)
 		// shouldn't happen.
 		//prompt.alert("Redirection", "Requested article ("+dataBaseResult.articleName+") point to "+dataBaseResult.redirect+" in the database.");
 	}
-	
-	if (dataBaseResult.nbOccur == 0) {
+	L.error ("aarchive: --"+dataBaseResult.aarchive+"--");
+	if (dataBaseResult.nbOccur == 0 || dataBaseResult.aarchive.toString () == "undefined") {
 		// not found in DB ; should send the error page.
 		//prompt.alert("Database Error", "Requested article ("+dataBaseResult.articleName+") couldn't be found in the database.");
 		errorFile = docrootFD.clone();
 		errorFile.append("error.html");
-		dataString += getFileContent(errorFile.path);
+		L.error (errorFile.path);
+		dataString = getFileContent(errorFile.path);
+		this.respond(dataString);
+		return;
 	}
 	
 	if (dataBaseResult.aarchive != dataBaseResult.barchive)
@@ -151,10 +186,17 @@ function moulinch_aopen (streamListener, context)
 	archivefile.append(dataBaseResult.aarchive+format.extension);
 
 	var dataString = new String();
-	if (format.header)
-		dataString += globalReplace(getFileContent(headerFile.path), {var:"TITLE", value:dataBaseResult.articleName.replace(/_/g, " ")});
+	if (format.header) {
+	   if (!format.newcharset) {
+            var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
+	       	converter.charset =  format.charset;
+    		var pageTitle = converter.ConvertFromUnicode(dataBaseResult.articleName);
+        } else { pageTitle = dataBaseResult.articleName }
+		dataString += globalReplace(getFileContent(headerFile.path), {var:"TITLE", value:pageTitle});
+    }
 	
 	if (format.compression.match(/bzip2/i)) {
+		L.info ('asking comp for: '+archivefile.path+' ('+dataBaseResult.astartoff+', '+length+')');
 		dataString += moulinComp.retrieveBzip2Content(archivefile.path, dataBaseResult.astartoff, length);
 	} else if (format.compression.match(/gzip/i)) {
 		dataString += moulinComp.retrieveGzipContent(archivefile.path, dataBaseResult.astartoff, length);
@@ -211,8 +253,13 @@ MoulinProtocolHandler.prototype.allowPort = function moulin_allowport (aPort, aS
 MoulinProtocolHandler.prototype.newURI =
 function moulin_newuri (spec, charset, baseURI)
 {
-    var uri = Components.classes["@mozilla.org/network/simple-uri;1"].createInstance(Components.interfaces.nsIURI);
-    uri.spec = spec;
+    var uri = Components.classes["@mozilla.org/network/simple-uri;1"]
+    		 .createInstance (Components.interfaces.nsIURI);
+   	// handle anchor links
+    if (baseURI instanceof nsIURI && spec.indexOf ("#") == 0) {
+	   	uri.spec = baseURI.spec+spec;
+	} else 
+	    uri.spec = spec;
     return uri;
 }
 
@@ -327,14 +374,16 @@ function getContentOfFile(fileName, startoffset, length) {
 // returns DB details such as redirect, archives and offsets
 function fetchDBDetails( dataDB, articleName ) {
 	var result = {};
-	var storageService = Components.classes["@mozilla.org/storage/service;1"].getService(Components.interfaces.mozIStorageService);
+	var storageService = Components.classes["@mozilla.org/storage/service;1"]
+	.getService(Components.interfaces.mozIStorageService);
+	L.info ("trying to access DB: " + dataDB.path);
 	var mDBConn = storageService.openDatabase(dataDB);
 	var statement = mDBConn.createStatement("SELECT a.title, a.archive, a.startoff, b.title, b.archive, b.startoff, a.id, a.redirect FROM windex a, windex b WHERE b.id = (a.id + 1) AND a.title = ?1;");
 	statement.bindUTF8StringParameter(0, articleName);
 	result.nbOccur = 0;
 	while (statement.executeStep()) {
 		result.nbOccur++;
-		result.articleName = statement.getUTF8String(0);
+		result.articleName = statement.getUTF8String(0).replace(/_/g, " ");
 		result.aarchive = statement.getUTF8String(1);
 		result.astartoff = statement.getInt32(2);
 		result.barchive = statement.getUTF8String(4);

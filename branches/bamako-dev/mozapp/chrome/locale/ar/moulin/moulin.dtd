@@ -11,3 +11,9 @@
 <!ENTITY moulin.sizeUp		"نص أكبر">
 <!ENTITY moulin.sizeDown	"نص أصغر">
 <!ENTITY moulin.dir    		"rtl">
+<!ENTITY moulin.toggleFullscreen "بدّل وضع ملء الشاشة">
+<!ENTITY moulin.toggleSidebar "بدّل شريط العلامات">
+<!ENTITY project.encyclopedia "ويكيبيديا">
+<!ENTITY project.books "ويكي اقتباس">
+<!ENTITY project.quote "ويكي كتب">
+<!ENTITY project.source "ويكي مصدر">
