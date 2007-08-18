@@ -131,28 +131,30 @@ function moulin_newchannel (uri)
 	var articleName = tmp.substr(sepI + 1, tmp.length).replace(/ /g, "_");;
     
     var tmpFile = Components.classes["@mozilla.org/file/directory_service;1"].getService(Components.interfaces.nsIProperties).get("TmpD", Components.interfaces.nsIFile);
-    tmpFile.append(articleName);
+    tmpFile.append(articleName+".png");
     
-    var docrootFD = Components.classes["@mozilla.org/file/directory_service;1"].getService(Components.interfaces.nsIProperties).get("resource:app", Components.interfaces.nsIFile);
-	var todocrootpath = "datas/"+lang+"/"+project;
-	for each (var i in todocrootpath.split("/")) { docrootFD.append(i); }
-	dataDB = datarootFD.clone();
-	dataDB.append("index.db");
-	dataBaseResult = fetchDBDetails(dataDB, articleName);
-	
-    if (dataBaseResult.nbOccur == 0) {
-        return;
-	}
-	
-	if (dataBaseResult.aarchive != dataBaseResult.barchive)
-		length = -1;
-	else
-		length = dataBaseResult.bstartoff - dataBaseResult.astartoff;
-
-	archivefile = datarootFD.clone();
-	archivefile.append(dataBaseResult.aarchive);
-
-    createTemporaryFile(archivefile.path, dataBaseResult.astartoff, length, tmpFile.path);
+    if (!tmpFile.exists()) {
+        var docrootFD = Components.classes["@mozilla.org/file/directory_service;1"].getService(Components.interfaces.nsIProperties).get("resource:app", Components.interfaces.nsIFile);
+    	var todocrootpath = "datas/"+lang+"/"+project;
+    	for each (var i in todocrootpath.split("/")) { docrootFD.append(i); }
+    	dataDB = docrootFD.clone();
+    	dataDB.append("index.db");
+    	dataBaseResult = fetchDBDetails(dataDB, articleName);
+    
+        if (dataBaseResult.nbOccur == 0) {
+            return;
+    	}
+    	
+    	if (dataBaseResult.aarchive != dataBaseResult.barchive)
+    		length = -1;
+    	else
+    		length = dataBaseResult.bstartoff - dataBaseResult.astartoff;
+    
+    	archivefile = docrootFD.clone();
+    	archivefile.append(dataBaseResult.aarchive);
+        
+        createTemporaryFile(archivefile.path, dataBaseResult.astartoff, length, tmpFile.path);
+    }
     
     var ioService = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);
     var newURI = ioService.newURI("file://"+tmpFile.path, null, null); 

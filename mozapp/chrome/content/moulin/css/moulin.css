@@ -43,3 +43,5 @@ div#contentSub {
 .error {
     display:none;
 }
+
+#column-content * img { display: none; }

@@ -24,10 +24,10 @@
 */
 
 // Used everywhere as default language.
-var DEFAULT_LANGUAGE_DATA	= "eo";
-var DEFAULT_LANGUAGE_UI		= "fr-FR";
+var DEFAULT_LANGUAGE_DATA	= "fa";
+var DEFAULT_LANGUAGE_UI		= "fa";
 var DEFAULT_PROJECT			= "encyclopedia";
-var DEFAULT_LANGUAGE_DIR    = "ltr";
+var DEFAULT_LANGUAGE_DIR    = "rtl";
 
 /*
 
