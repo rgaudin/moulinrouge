@@ -15,22 +15,51 @@ var NB_RESULTS = [[[NBRESULTS]]];
 var LIMIT_S = [[[LIMIT_S]]];
 var LIMIT_N = [[[LIMIT_N]]];
 var PROJECT = "[[[PROJECT]]]";
+var CURRENT_PROJECT = "[[[CURRENT_PROJECT]]]";
 var LANG = "[[[LANG]]]";
 var SEARCHQUERRY = "[[[SEARCHQUERY]]]";
+var selectedId = null;
 
-function displayLinks()
+function displayProject (id) {
+	var d, dest, d2, dest2;
+	d = document.getElementById(id);
+	dest = document.getElementById('displayed_content');
+	dest.innerHTML = d.innerHTML;
+	
+	// nav links
+	d2 = document.getElementById(id+'_nav');
+	dest2 = document.getElementById('displayed_nav');
+	dest2.innerHTML = d2.innerHTML;
+	dest2.className = 'search-nav';
+	
+	switchSelected (id);
+}
+
+function switchSelected (id) {
+	var d;
+	if (selectedId != null) {
+		d = document.getElementById(selectedId+'_header');
+		d.className = d.className.replace('selected', 'unselected');
+	}
+	d = document.getElementById(id+'_header');
+	d.className = d.className.replace('unselected', 'selected');
+	selectedId = id;
+}
+
+function displayLinks (id, project, nb_results)
 {
-	d = document.getElementById('search-nav');
+	d = document.getElementById(id);
 	str = "";
-	var nbl = NB_RESULTS / LIMIT_N;
+	var nbl = nb_results / LIMIT_N;
+	var LIMIT_SS = (project == CURRENT_PROJECT) ? LIMIT_S : 0;
 	if (nbl > 1) {
 		nbm = (nbl >= 10) ? 10 : nbl;
 		str += "<li><a>Accèder aux pages :</a></li>"
 		for (var i=0;i<nbm;i++) {
-			if ((LIMIT_N*i) == LIMIT_S) { // current page
-				str += "<li class=\"n-search-sel\"><a href=\"moulin-search://"+(LIMIT_N * i)+":"+LIMIT_N+"@"+PROJECT+"/"+LANG+"/[[[SEARCHQUERY]]]\">"+(i +1)+"</a></li>";
+			if ((LIMIT_N*i) == LIMIT_SS) { // current page
+				str += "<li class=\"n-search-sel\"><a href=\"moulin-search://"+(LIMIT_N * i)+":"+LIMIT_N+"@"+project+"/"+LANG+"/[[[SEARCHQUERY]]]\">"+(i +1)+"</a></li>";
 			} else
-				str += "<li class=\"n-search\"><a href=\"moulin-search://"+(LIMIT_N * i)+":"+LIMIT_N+"@"+PROJECT+"/"+LANG+"/[[[SEARCHQUERY]]]\">"+(i +1)+"</a></li>";
+				str += "<li class=\"n-search\"><a href=\"moulin-search://"+(LIMIT_N * i)+":"+LIMIT_N+"@"+project+"/"+LANG+"/[[[SEARCHQUERY]]]\">"+(i +1)+"</a></li>";
 		}
 	}
 	d.innerHTML = str;
@@ -47,7 +76,7 @@ function displayLinks()
 <h1>Wikimédia par moulin</h1>
 
 <div id="logo">
-<a href="home.html" title="return to the homepage"><img src="chrome://moulin/locale/docroot/imgs/wikimediabymoulin.png" alt="moulin - la wikipédia offline" /></a>
+<a href="chrome://moulin/locale/docroot/home.html" title="return to the homepage"><img src="chrome://moulin/locale/docroot/imgs/wikimediabymoulin.png" alt="moulin - la wikipédia offline" /></a>
 </div>
 
 <ul id="nav" class="clear">
@@ -60,6 +89,7 @@ function displayLinks()
 
 </div>
 
+<div id="test"></div>
 <div id="search">
 
 <h2>Recherchez !</h2>
@@ -76,5 +106,5 @@ function displayLinks()
 
 <div id="content">
 
-<h2>Votre recherche [[[SEARCHQUERY]]] a renvoyée [[[NBRESULTS]]] résultat(s) :</h2>
-<ul>
+<h2>Votre recherche &laquo;[[[SEARCHQUERY]]]&raquo; a renvoyée [[[NBRESULTS]]] résultat(s) :</h2>
+</div>

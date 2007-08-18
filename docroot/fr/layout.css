@@ -9,7 +9,7 @@
 
 
 /* stops the nasty horizontal shift with centered layouts in moz etc */
-html { height: 100%; margin-bottom: 1px; }
+html { margin-bottom: 1px; }
 
 /* overrule basic.css styles */
 body {
@@ -29,9 +29,6 @@ body {
     visibility: hidden;
 }
 
-/* no need to hide from IE5 Mac as its filtered out anyway */
-.clear {display:inline-block;}
-
 #wrapper {
 	width: 780px;
 	background: #fff;
@@ -44,7 +41,8 @@ body {
 
 #header,
 #content,
-#footer {
+#footer,
+.content {
 	width: 674px;
 	clear: both;
 	margin: 0 auto;
@@ -56,7 +54,7 @@ body {
 }
 
 #nav {
-	margin: -15px 0 0 100px;
+	margin: -30px 0 0 100px;
 }
 
 #nav a {
@@ -85,7 +83,7 @@ body {
 #help .n-help a {
  color: #fff;
  background-color: #990000;
-}moulin - la wikipédia offline 
+}
 
 #nav li {
  display:inline;
@@ -104,6 +102,7 @@ body {
 	margin: 0;
 	padding: 0 55px;
 	position: relative;
+	display: none;
 }
 
 #home #search {
@@ -111,7 +110,7 @@ body {
 }
 
 
-#content {
+#content, .content {
 	margin: 0 auto;
 }
 
@@ -191,7 +190,7 @@ img .inline {
 input, select { color: black; }
 
 #nav2 {
-	margin: -18px 0 0 0;
+	margin: 0 0 0 0;
 	width:745px;
 	background-color: #ddd;
 	background-repeat: repeat-x;
@@ -214,18 +213,21 @@ input, select { color: black; }
 	color: #333;
 }
 #autres.wikiquote.selection .n2-selection a,
+#autres.wikibooks.selection .n2-selection a,
+#autres.wikisource.selection .n2-selection a,
 #wikipedia.portal .n2-portal a,
 #wikipedia.good .n2-good a,
 #wikipedia.quality .n2-quality a,
 #wikipedia.category .n2-category a {
 	color: #333;
-}
-	margin: 0;
+	margin:0;
 	padding: 0 55px;
 	position: relative;
 }
 
 #autres.wikiquote.selection .n2-selection a,
+#autres.wikibooks.selection .n2-selection a,
+#autres.wikisource.selection .n2-selection a,
 #wikipedia.portal .n2-portal a,
 #wikipedia.good .n2-good a,
 #wikipedia.quality .n2-quality a,
@@ -237,11 +239,13 @@ input, select { color: black; }
  display:inline;
 }
 
-#content ul {
+#content ul,
+.content {
 	list-style-type: square;
 }
 
-#content li em {
+#content li em,
+.content li em {
 	font-style: normal;
 	font-weight: bold;
 }
@@ -257,7 +261,8 @@ li.projectlist img {
 	vertical-align: middle;
 }
 
-#content h3 a { 	
+#content h3 a,
+.content h3 a { 	
 	text-decoration: none;
 	font-size:14px;
 	font-weight:bold;
@@ -265,21 +270,49 @@ li.projectlist img {
 	color: #000;
 }
 
-#content li a {
+#content li a,
+.content li a {
 	font-weight: normal;
 }
 
-#search-nav {
-	margin: 10px 0 10px 0;
+.search-nav, .project-header {
+	margin: 0px 0 0px 0;
 	width:745px;
 	height:2em;
 	background-color: #ddd;
 	background-repeat: repeat-x;
-	background-position: 0% -1.3em;
 	padding-left:35px;
 }
 
-#search-nav a {
+.project-header {
+	width: 740px;
+	line-height: 2em;
+	background-color: #ddd;
+	color: #333;
+	font-size: 13px;
+	padding:0 20px 0 20px;
+	margin-bottom: 1px;
+}
+
+.project-header .project { 
+	font-weight: bold;
+}
+
+.project-header.selected {
+	background-color: #333;
+	color: white;
+}
+
+.project-header.unselected {
+	background-color: #ddd;
+	color: #333;
+}
+
+.project-header.unselected:hover {
+	cursor: pointer;
+}
+
+.search-nav a {
 	display: block;
 	float: left;
 	text-decoration: none;
@@ -290,15 +323,16 @@ li.projectlist img {
 	padding:0 20px 0 20px;
 }
 
-#search-nav a:hover, #search-nav li.n-search-sel a {
+.search-nav a:hover, .search-nav li.n-search-sel a {
 	color: #333;
 }
 
-#search-nav li {
+.search-nav li {
  display:inline;
 }
 
-#content .leftcol {
+#content .leftcol,
+.content .leftcol {
 	padding-top:15px;
 	padding-right: 5px;
 	width: 425px;
@@ -306,14 +340,16 @@ li.projectlist img {
 /*	background-color: green;*/
 }
 
-#content .rightcol {
+#content .rightcol,
+.content .rightcol {
 	padding-left:5px;
 	width: 239px;
 	float: right;
 /*	background-color: blue;*/
 }
 
-#content .rightcol ul {
+#content .rightcol ul,
+.content .rightcol ul {
 	list-style-type: none;
 	margin-left:0;
 }
@@ -321,4 +357,9 @@ li.projectlist img {
 .rightcol a { font-weight: normal; }
 .leftcol a { text-decoration: none; }
 
-#content ul li img { vertical-aligne: middle; display: inline; }
+#content ul li img,
+.content ul li img { vertical-align: middle; display: inline; }
+
+.hidden {
+	display: none;
+}

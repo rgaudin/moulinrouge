@@ -31,12 +31,13 @@
 
 </div>
 
+<div id="test"></div>
 <div id="search">
 
 <h2>Recherchez !</h2>
 <p>Pour acceder au contenu, entrez un mot-clé, choisissez un domaine et validez...
-<input type="text" id="search-query" value="" maxlength="512" /><input type="hidden" id="lang" value="fa" />
-<select id="project">
+<input type="text" id="search-query" value="" maxlength="512" onchange="search();" /><input type="hidden" id="lang" value="fa" />
+<select id="project" onchange="search();">
 <option value="encyclopedia">Wikipédia</option>
 <option value="quote">Wikiquote</option>
 <option value="books">Wikibooks</option>
