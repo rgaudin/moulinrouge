@@ -1,6 +1,0 @@
-compression:bzip2
-type:text/html
-charset:UTF-8
-newcharset:UTF-8
-header:header.html
-extension:.bz2
