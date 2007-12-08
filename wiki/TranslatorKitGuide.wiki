@@ -1,0 +1,55 @@
+#summary How to translate moulin from the translator kit
+
+=Translating with the Kit=
+
+Doing a localized version of moulin is an easy task but it requires some time and translation work.
+
+We are discussing here the adaptation of a regular moulin release. You can of course do specific version for a country or a community but we would like to have at least one "standard" version for all languages.
+
+==Download the translator kit==
+Grab the latest version from http://moulinwiki.org/download/ and uncompress it to your hard-drive.
+
+Use the 7-zip software (free) on Windows, mount -o loop -t iso9660 on Linux and double-clic on Mac.
+
+The translator kit is a working version of moulin for the [http://simple.wikipedia.org/wiki/Wikipedia:Simple_English_Wikipedia simle english] language.
+
+==Request locale datas==
+Go to http://groups.google.com/group/moulinwiki and ask on the list for datas in your language.
+
+Please, provide a list of Wikimedia projects (wikipedia, wikiversity, etc) you want to include with a list of to-be-included Namespaces for each project (portal, category).
+
+This should take a few days. Move on while waiting for datas.
+
+==Extract the datas you need to work on.==
+Please note that from now, we will consider <LC> the language code of your target version. "en" for english, "fr" for french, "simple" for simple-english...
+
+ * rename moulin/datas/simple to moulin/datas/<LC>
+ * rename moulin/chrome/locale/simple to moulin/chrome/locale/<LC>
+ * Edit moulin/default/preferences/moulin-prefs.js
+   * change «pref("general.useragent.locale", "simple");» to «pref("general.useragent.locale", "<LC>");»
+   * change «pref("moulin.datas.language", "simple");» to «pref("moulin.datas.language", "<LC>");»
+   * change «pref("moulin.ui.language", "simple");» to «pref("moulin.ui.language", "<LC>");»
+ * modify «pref("moulin.dir", "rtl");» to "rtl" or "ltr" whether your language writes Right To Left or Left To Right.
+ * Edit moulin/chrome/chrome.manifest
+	replace «locale moulin simple locale/simple/moulin/» with «locale moulin <LC> locale/<LC>/moulin/»
+
+==Translate==
+All the translation work takes place in the moulin/chrome/locale/<LC>/moulin directory.
+ * Edit moulin.dtd: translate each entity value.
+ * Edit moulin.properties: translate everything at the right of the equal (=) symbol.
+ * Edit the docroot/ folder as you want !
+You must keep the home.html as entry point, but you can do whatever you want with the rest: change the number of files, the CSS, etc.
+
+While doing a standard version, please keep the design close to the KIT and keep the Credits and Help pages as is. What should goes to Home or the other pages is up to you : the "rule" is to provide users several ways to get into the differents projects by linking to revelent portals or categories, etc.
+
+We usually reuse content from the Wikipedia: namespace which is never included (automaticaly generated content for example).
+
+If you are not sure what to include in those pages, please, ask the group !
+
+If you want to include some content from another page (like the list of categories in the Home of the Kit), please, ask the group, indicating the original URL and describing clearly which part you want.
+
+==Use your received locale datas==
+Once your datas has been generated, you will be asked to download an archives.
+After unpacking it, replace the moulin/datas/<LC> folder with the one provided.
+
+Launch moulin, test it and discuss any requiered change in the group.
